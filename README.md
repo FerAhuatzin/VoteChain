@@ -16,6 +16,10 @@ Movile application to develop safe ballots of any kind
 ```
 cd ...\VoteChain\Frontend
 ```
+- Install the packages.
+```
+npm install
+```
 - Execute one of the following commands.
 ```
 npm run android 
@@ -26,3 +30,17 @@ npm run web
 ```
 
 ### Backend developers
+
+#### Steps 
+- cd to VoteChain\Backend
+```
+cd ...\VoteChain\Backend
+```
+- Install the packages.
+```
+npm install
+```
+- Execute the following command.
+```
+npm run start
+```

@@ -5,7 +5,6 @@ import "./global.css"
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text className="text-xl">Open up App.js to start working on your app! AHHH</Text>
       <Text className="text-2xl">Hello World</Text>
       <StatusBar style="auto" />
     </View>

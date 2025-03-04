@@ -12,6 +12,6 @@
   "description": "",
   "dependencies": {
     "backend": "file:",
-    "Express": "3.0.1"
+    "express": "^4.21.2"
   }
 }

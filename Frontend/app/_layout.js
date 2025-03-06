@@ -1,10 +1,9 @@
-import {Slot} from 'expo-router'
-import {View} from 'react-native'
+import { Stack } from 'expo-router/stack';
 
-export default function Layout(){
-    return (
-        <View className="flex-1 items-center justify-center">
-            <Slot/>
-        </View>
-    );
+export default function Layout() {
+  return (
+    <Stack>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+    </Stack>
+  );
 }

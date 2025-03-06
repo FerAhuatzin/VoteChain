@@ -9,25 +9,25 @@ export default function TabsLayout(){
             name="index"
             options={{
                 title: 'Inicio',
-                tabBarIcon: ({color}) => <HomeIcon size={24} color={color}/>,
+                tabBarIcon: ({color}) => <HomeIcon size={30} color={color}/>,
             }}/>
             <Tabs.Screen
             name="my-votes"
             options={{
                 title: 'Mis votaciones',
-                tabBarIcon: ({color}) => <MyVotesIcon size={24} color={color}/>,
+                tabBarIcon: ({color}) => <MyVotesIcon size={30} color={color}/>,
             }}/>
             <Tabs.Screen
             name="create"
             options={{
                 title: 'Crear',
-                tabBarIcon: ({color}) => <CreateIcon size={24} color={color}/>,
+                tabBarIcon: ({color}) => <CreateIcon size={30} color={color}/>,
             }}/>
             <Tabs.Screen
             name="profile"
             options={{
                 title: 'Perfil',
-                tabBarIcon: ({color}) => <ProfileIcon size={24} color={color}/>,
+                tabBarIcon: ({color}) => <ProfileIcon size={30} color={color}/>,
             }}/>
         </Tabs>
     );

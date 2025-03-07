@@ -40,18 +40,15 @@ app.post('/crear-votacion', async (req, res) => {
     try {
         const { emailUsuario, titulo, descripcion, tipo, fechaInicio, fechaFin } = req.body;
 
-        // Validar datos
         if (!emailUsuario || !titulo || !descripcion || !tipo || !fechaInicio || !fechaFin) {
             return res.status(400).json({ error: "Todos los campos son obligatorios" });
         }
 
-        // Buscar usuario en MongoDB
         const usuario = await Usuario.findOne({ email: emailUsuario });
         if (!usuario) {
             return res.status(404).json({ error: "Usuario no encontrado" });
         }
 
-        // Crear la votación con el ID del usuario
         const nuevaVotacion = new Votacion({
             idUsuarioCreador: usuario._id,
             titulo,
@@ -72,6 +69,7 @@ app.post('/crear-votacion', async (req, res) => {
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 3000;
+console.log(app._router.stack.map(r => r.route?.path).filter(Boolean));
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`Servidor corriendo en http://129.146.38.202:${PORT}`);
 });

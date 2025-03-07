@@ -1,40 +1,52 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+require('dotenv').config(); // Para usar variables de entorno
 
 const app = express();
-app.use(express.json()); 
-app.use(cors());
+app.use(express.json());
+app.use(cors({
+    origin: '*', // Ajusta según tus necesidades de seguridad
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
-// Conectar a MongoDB (cambia la URL si usas un servidor en la nube)
-mongoose.connect('mongodb://admin:admin@129.146.38.202:27017/', { useNewUrlParser: true, useUnifiedTopology: true });
+// Conectar a MongoDB usando variables de entorno
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://admin:admin@129.146.38.202:27017/';
+mongoose.connect(MONGO_URI)
+    .then(() => console.log("✅ Conectado a MongoDB"))
+    .catch(err => console.error("❌ Error al conectar a MongoDB:", err));
 
 // Definir modelos
 const Usuario = mongoose.model('usuario', new mongoose.Schema({
     nombre: String,
     email: String,
     contraseña: String,
-    fechaRegistro: Date
+    fechaRegistro: { type: Date, default: Date.now }
 }));
 
 const Votacion = mongoose.model('votaciones', new mongoose.Schema({
-    idUsuarioCreador: mongoose.Schema.Types.ObjectId,
+    idUsuarioCreador: { type: mongoose.Schema.Types.ObjectId, ref: 'usuario' },
     titulo: String,
     descripcion: String,
     tipo: String,
     fechaInicio: Date,
     fechaFin: Date,
-    estado: String
+    estado: { type: String, default: 'activa' }
 }));
 
-//Endpoint para crear una votación
+// Endpoint para crear una votación
 app.post('/crear-votacion', async (req, res) => {
     try {
         const { emailUsuario, titulo, descripcion, tipo, fechaInicio, fechaFin } = req.body;
-        
+
+        // Validar datos
+        if (!emailUsuario || !titulo || !descripcion || !tipo || !fechaInicio || !fechaFin) {
+            return res.status(400).json({ error: "Todos los campos son obligatorios" });
+        }
+
         // Buscar usuario en MongoDB
         const usuario = await Usuario.findOne({ email: emailUsuario });
-
         if (!usuario) {
             return res.status(404).json({ error: "Usuario no encontrado" });
         }
@@ -47,18 +59,19 @@ app.post('/crear-votacion', async (req, res) => {
             tipo,
             fechaInicio: new Date(fechaInicio),
             fechaFin: new Date(fechaFin),
-            estado: "activa"
         });
 
         await nuevaVotacion.save();
         res.status(201).json({ mensaje: "Votación creada exitosamente", votacion: nuevaVotacion });
 
     } catch (error) {
+        console.error("Error en /crear-votacion:", error);
         res.status(500).json({ error: "Error al crear la votación" });
     }
 });
 
 // Iniciar el servidor
-app.listen(3000, () => {
-    console.log("🚀 Servidor corriendo en http://localhost:3000");
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Servidor corriendo en http://129.146.38.202:${PORT}`);
 });

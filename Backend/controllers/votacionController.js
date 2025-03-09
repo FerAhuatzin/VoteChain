@@ -1,16 +1,18 @@
 const Votacion = require('../models/Votacion');
+const Usuario = require('../models/Usuario');
 
 exports.crearVotacion = async (req, res) => {
     try {
-        const { idUsuarioCreador, titulo, descripcion, tipo, fechaInicio, fechaFin } = req.body;
+        const { emailUsuario, titulo, descripcion, tipo, fechaInicio, fechaFin } = req.body;
 
-        // Validar que todos los campos obligatorios estén presentes
-        if (!idUsuarioCreador || !titulo || !descripcion || !tipo || !fechaInicio || !fechaFin) {
-            return res.status(400).json({ error: "Todos los campos son obligatorios" });
+        // Buscar el usuario por email
+        const usuario = await Usuario.findOne({ email: emailUsuario });
+        if (!usuario) {
+            return res.status(404).json({ error: "❌ Usuario no encontrado" });
         }
 
         const nuevaVotacion = new Votacion({
-            idUsuarioCreador,
+            idUsuarioCreador: usuario._id, // Usamos el _id obtenido del usuario
             titulo,
             descripcion,
             tipo,
@@ -24,9 +26,10 @@ exports.crearVotacion = async (req, res) => {
 
     } catch (error) {
         console.error("❌ Error al crear la votación:", error);
-        res.status(500).json({ error: "Error interno al crear la votación", detalle: error.message });
+        res.status(500).json({ error: "Error interno al crear la votación" });
     }
 };
+
 
 exports.obtenerVotaciones = async (req, res) => {
     try {

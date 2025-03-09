@@ -1,34 +1,22 @@
 const Votacion = require('../models/Votacion');
-const Usuario = require('../models/Usuario');
 
 exports.crearVotacion = async (req, res) => {
-    try {
-        const { emailUsuario, titulo, descripcion, tipo, fechaInicio, fechaFin } = req.body;
+    const nuevaVotacion = new Votacion(req.body);
+    await nuevaVotacion.save();
+    res.status(201).json({ mensaje: "Votación creada", votacion: nuevaVotacion });
+};
 
-        if (!emailUsuario || !titulo || !descripcion || !tipo || !fechaInicio || !fechaFin) {
-            return res.status(400).json({ error: "Todos los campos son obligatorios" });
-        }
+exports.obtenerVotaciones = async (req, res) => {
+    const votaciones = await Votacion.find();
+    res.status(200).json(votaciones);
+};
 
-        const usuario = await Usuario.findOne({ email: emailUsuario });
-        if (!usuario) {
-            return res.status(404).json({ error: "Usuario no encontrado" });
-        }
+exports.actualizarVotacion = async (req, res) => {
+    const votacionActualizada = await Votacion.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.status(200).json(votacionActualizada);
+};
 
-        const nuevaVotacion = new Votacion({
-            idUsuarioCreador: usuario._id,
-            titulo,
-            descripcion,
-            tipo,
-            fechaInicio: new Date(fechaInicio),
-            fechaFin: new Date(fechaFin),
-            estado: "activa"
-        });
-
-        await nuevaVotacion.save();
-        res.status(201).json({ mensaje: "Votación creada exitosamente", votacion: nuevaVotacion });
-
-    } catch (error) {
-        console.error("❌ Error al crear votación:", error);
-        res.status(500).json({ error: "Error al crear la votación", detalle: error.message });
-    }
+exports.eliminarVotacion = async (req, res) => {
+    await Votacion.findByIdAndDelete(req.params.id);
+    res.status(200).json({ mensaje: "Votación eliminada" });
 };

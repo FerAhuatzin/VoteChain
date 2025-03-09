@@ -5,6 +5,6 @@ const votoSchema = new mongoose.Schema({
     idOpcion: { type: mongoose.Schema.Types.ObjectId, ref: 'Opcion', required: true },
     idUsuario: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true },
     fechaVoto: { type: Date, default: Date.now }
-});
+}, { collection: 'votos' }); // 🔹 Especificamos la colección
 
-module.exports = mongoose.model('Voto', votoSchema);
+module.exports = mongoose.model('Voto', votoSchema, 'votos');

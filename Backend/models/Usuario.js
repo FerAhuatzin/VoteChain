@@ -6,6 +6,6 @@ const usuarioSchema = new mongoose.Schema({
     email: { type: String, unique: true },
     contraseña: String,
     fechaRegistro: { type: Date, default: Date.now }
-});
+}, { collection: 'usuarios' }); // 🔹 Especificamos la colección
 
-module.exports = mongoose.model('Usuario', usuarioSchema);
+module.exports = mongoose.model('Usuario', usuarioSchema, 'usuarios');

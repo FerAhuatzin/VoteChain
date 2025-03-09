@@ -12,7 +12,7 @@ app.use(cors({
 }));
 
 // Conectar a MongoDB usando variables de entorno
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://admin:admin@129.146.38.202:27017/';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://admin:admin@129.146.38.202:27017/votechainDBtest';
 mongoose.connect(MONGO_URI)
     .then(() => console.log("✅ Conectado a MongoDB"))
     .catch(err => console.error("❌ Error al conectar a MongoDB:", err));

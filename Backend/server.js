@@ -35,6 +35,38 @@ const Votacion = mongoose.model('votaciones', new mongoose.Schema({
     estado: { type: String, default: 'activa' }
 }));
 
+app.post('/crear-usuario', async (req, res) => {
+    try {
+        const { nombre, edad, email, contraseña, fechaRegistro } = req.body;
+
+        if (!nombre || !edad || !email || !contraseña || !fechaRegistro) {
+            return res.status(400).json({ error: "Todos los campos son obligatorios" });
+        }
+
+        // Verificar si el usuario ya existe
+        const usuarioExistente = await Usuario.findOne({ email });
+        if (usuarioExistente) {
+            return res.status(400).json({ error: "El usuario ya existe" });
+        }
+
+        // Crear nuevo usuario
+        const nuevoUsuario = new Usuario({
+            nombre,
+            edad,
+            email,
+            contraseña,
+            fechaRegistro: new Date(fechaRegistro)
+        });
+
+        await nuevoUsuario.save();
+        res.status(201).json({ mensaje: "Usuario creado exitosamente", usuario: nuevoUsuario });
+
+    } catch (error) {
+        console.error(" Error en /crear-usuario:", error);
+        res.status(500).json({ error: "Error al crear el usuario", detalle: error.message });
+    }
+});
+
 // Endpoint para crear una votación
 app.post('/crear-votacion', async (req, res) => {
     try {

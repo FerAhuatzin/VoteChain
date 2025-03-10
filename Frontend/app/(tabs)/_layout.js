@@ -1,10 +1,11 @@
 import {Tabs} from 'expo-router';
 import {View} from 'react-native';
 import {HomeIcon, MyVotesIcon, CreateIcon, ProfileIcon} from "../../components/icons";
+import {colors} from "../../styles/colors";
 
 export default function TabsLayout(){
     return (
-        <Tabs screenOptions={{ tabBarActiveTintColor: 'blue' }}>
+        <Tabs screenOptions={{tabBarActiveTintColor: colors.primary,}}>
             <Tabs.Screen
             name="index"
             options={{

@@ -1,9 +1,11 @@
-import {View, Text} from 'react-native'
+import { View, Text } from "react-native";
+import { HomeHeader } from "../../components/homeHeader";
+import { Stack } from "expo-router";
 
-export default function Index(){
-    return (
-        <View className="flex-1 items-center justify-center">
-            <Text className="text-4xl">Inicio</Text>
-        </View>
-    );
+export default function Index() {
+  return (
+    <View style={{ flex: 1}}>
+      <Stack.Screen options={{ header: () => <HomeHeader /> }} />
+    </View>
+  );
 }

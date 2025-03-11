@@ -49,3 +49,7 @@ export const CinemaIcon = (props) => (
 export const EconomyIcon = (props) => (
     <FontAwesome5 name="coins" {...props} />
 )
+
+export const ClockIcon = (props) => (
+    <AntDesign name="clockcircle" {...props} />
+)

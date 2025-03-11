@@ -39,16 +39,26 @@ const categories = [
   },
 ];
 
-export const HomeHeader = (props) => {
+//Let know the index.js that the category was changed
+interface props {
+  onCategoryChanged: (category: string) => void
+}
+
+export const HomeHeader = ({onCategoryChanged}: props) => {
   const [selectedCategory, setSelectedCategory] = useState("Populares"); 
   const [searchText, setSearchText] = useState("");
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    onCategoryChanged(category);
+  };
 
   return (
     <SafeAreaView style={{ backgroundColor: "white"}}>
       <View style={{ alignItems: "center", paddingVertical: 10 }}>
         <View style={styles.searchBar}>
           <SearchIcon size={20} style={{position: "absolute", left: 15, opacity: 0.5}} />
-          <TextInput style={{paddingLeft: 15}} placeholder="Encuentra votaciones interesantes" value={searchText} onChangeText={setSearchText} />
+          <TextInput style={{position: "absolute", left: 40}} placeholder="Encuentra votaciones interesantes" value={searchText} onChangeText={setSearchText} />
         </View>
       </View>
 
@@ -60,7 +70,7 @@ export const HomeHeader = (props) => {
         {categories.map((category, index) => (
           <TouchableOpacity
             key={index}
-            onPress={() => setSelectedCategory(category.name)}
+            onPress={() => handleCategoryChange(category.name)}
             style={[
               styles.categoryItem,
               selectedCategory === category.name && styles.selectedCategory,
@@ -91,7 +101,6 @@ const styles = StyleSheet.create({
     width: "85%",
     height: 60,
     alignItems: "center",
-    justifyContent: "center",
   },
   categoryItem: {
     alignItems: "center",

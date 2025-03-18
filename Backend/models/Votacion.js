@@ -6,6 +6,10 @@ const votacionSchema = new mongoose.Schema({
         ref: 'Usuario', 
         required: true 
     },
+    emailUsuario: { // 🔹 No se almacena en el controller, pero si se quiere guardar
+        type: String,
+        trim: true
+    },
     titulo: { 
         type: String, 
         required: true, 
@@ -23,11 +27,16 @@ const votacionSchema = new mongoose.Schema({
     },
     fechaInicio: { 
         type: Date, 
-        required: true 
+        required: true,
+        default: Date.now // 🔹 Se asegura que siempre tenga un valor
     },
     fechaFin: { 
         type: Date, 
         required: true 
+    },
+    imagen: { 
+        type: String, // 🔹 URL de la imagen en Cloudinary
+        default: null 
     },
     estado: { 
         type: String, 
@@ -37,4 +46,3 @@ const votacionSchema = new mongoose.Schema({
 }, { collection: 'votaciones' }); // 🔹 Especificar la colección aquí
 
 module.exports = mongoose.model('Votacion', votacionSchema, 'votaciones');
-

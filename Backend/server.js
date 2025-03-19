@@ -20,12 +20,9 @@ app.use(cors());
 // Conectar a MongoDB
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://admin:admin@129.146.38.202:27017/votechainDBtest?authSource=admin';
 
-mongoose.connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 5000
-}).then(() => console.log("Conectado a MongoDB"))
-.catch(err => console.error("Error al conectar a MongoDB:", err));
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("Conectado a MongoDB"))
+  .catch(err => console.error("Error en MongoDB:", err));
 
 // Configurar Cloudinary
 cloudinary.config({

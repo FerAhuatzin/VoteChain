@@ -11,7 +11,6 @@ import {
   EconomyIcon,
 } from "./icons";
 import {colors} from "../styles/colors";
-import { opacity } from "react-native-reanimated/lib/typescript/Colors";
 const categories = [
   {
     name: "Populares",
@@ -58,7 +57,7 @@ export const HomeHeader = ({onCategoryChanged}: props) => {
       <View style={{ alignItems: "center", paddingVertical: 10 }}>
         <View style={styles.searchBar}>
           <SearchIcon size={20} style={{position: "absolute", left: 15, opacity: 0.5}} />
-          <TextInput style={{position: "absolute", left: 40}} placeholder="Encuentra votaciones interesantes" value={searchText} onChangeText={setSearchText} />
+          <TextInput style={{position: "absolute", left: 40, fontSize: 14}} placeholder="Encuentra votaciones interesantes" value={searchText} onChangeText={setSearchText} />
         </View>
       </View>
 
@@ -98,7 +97,7 @@ const styles = StyleSheet.create({
     borderColor: "#c2c2c2",
     borderWidth: StyleSheet.hairlineWidth,
     borderRadius: 50,
-    width: "85%",
+    width: "90%",
     height: 60,
     alignItems: "center",
   },
@@ -114,6 +113,7 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     marginTop: 5,
+    fontSize: 14,
   },
   selectedText: {
     color: colors.primary,

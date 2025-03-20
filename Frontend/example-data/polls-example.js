@@ -1,10 +1,12 @@
 import superbowlImage from "./assets/superbowl.webp";
 import chatvsdeepseekImage from "./assets/chatdeepseek.png";
 import trumpImage from "./assets/trump.jpg";
+import snoopy from "./assets/snoopy.jpg";
 
 export const pollsExample = [
   {
     id: 1,
+    idUsuarioCreador: 1,
     categoria: "Deportes",
     titulo: "¿Quién va a ganar el superbowl?",
     descripcion:
@@ -17,6 +19,7 @@ export const pollsExample = [
   },
   {
     id: 2,
+    idUsuarioCreador: 1,
     categoria: "Tecnología",
     titulo: "Deepseek o chatgpt",
     descripcion:
@@ -29,6 +32,7 @@ export const pollsExample = [
   },
   {
     id: 3,
+    idUsuarioCreador: 1,
     categoria: "Política",
     titulo: "Aranceles trump",
     descripcion:
@@ -40,3 +44,54 @@ export const pollsExample = [
     imagen: trumpImage,
   },
 ];
+
+export const votesExample = [
+  {idVotacion: 1,
+    opciones: [
+      {
+        descripcion: "Eagles",
+        votos: 100430
+      },
+      {
+        descripcion: "Kansas City Chiefs",
+        votos: 100427
+      }
+    ]
+  },
+  {idVotacion: 2,
+    opciones: [
+      {
+        descripcion: "Deepseek",
+        votos: 500
+      },
+      {
+        descripcion: "ChatGPT",
+        votos: 800
+      }
+    ]
+  },
+  {idVotacion: 3,
+    opciones: [
+      {
+        descripcion: "A favor",
+        votos: 120
+      },
+      {
+        descripcion: "En contra",
+        votos: 800
+      }
+    ]
+  }
+  
+];
+
+
+export const userExample = {
+  id: 1,
+  nombre: "Fer Ahuatzin",
+  edad: 21,
+  email: "f126ag",
+  contraseña: "Hola123",
+  fechaRegistro: "12/12/2021",
+  imagen: snoopy,
+};

@@ -1,4 +1,5 @@
 import Foundation from '@expo/vector-icons/Foundation';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -51,9 +52,29 @@ export const EconomyIcon = ({ size = 24, color = 'black', ...rest }) => (
   <FontAwesome5 name="coins" size={size} color={color} {...rest} />
 );
 
-export const ClockIcon = ({ size = 24, color = 'black', ...rest }) => (
-  <AntDesign name="clockcircle" size={size} color={color} {...rest} />
-);
+export const ClockIcon = (props) => (
+    <AntDesign name="clockcircle" {...props} />
+)
+
+export const BackIcon = (props) => (
+    <Ionicons name="arrow-back" {...props}/>
+)
+
+export const HeartIcon = (props) => (
+    <AntDesign name="heart" {...props} />
+)
+
+export const HeartOutlinedIcon = (props) => (
+    <FontAwesome name="heart-o" {...props} />
+)
+
+export const ShareIcon = (props) => (
+    <AntDesign name="sharealt" {...props} />
+)
+
+export const CircleIcon = (props) => (
+    <FontAwesome name="circle" {...props} />
+)
 
 export const MusicIcon = ({ size = 24, color = 'black', ...rest }) => (
     <Ionicons name="musical-notes-sharp" size={size} color={color} {...rest}/>

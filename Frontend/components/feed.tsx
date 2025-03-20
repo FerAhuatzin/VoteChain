@@ -1,14 +1,9 @@
-import React, { useState } from "react";
 import {
   View,
-  Text,
-  ScrollView,
-  TextInput,
   StyleSheet,
-  TouchableOpacity,
   FlatList,
 } from "react-native";
-import { FeedItem } from "./feed-element";
+import { FeedItem } from "./feedElement";
 
 interface props {
     data: any[];
@@ -19,8 +14,7 @@ export const Feed = ({data}: props) => {
     <View style={{ backgroundColor: "white", flex: 1 }}>
       <View
         style={{
-          width: "85%",
-          alignContent: "center",
+          width: "90%",
           alignSelf: "center",
           marginTop: 20,
         }}

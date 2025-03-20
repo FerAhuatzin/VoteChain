@@ -7,49 +7,50 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-export const HomeIcon = (props) => (
-    <Foundation name="home" {...props}/>
-)
+// Example: Provide defaults, but allow overrides via props
+export const HomeIcon = ({ size = 24, color = 'black', ...rest }) => (
+  <Foundation name="home" size={size} color={color} {...rest} />
+);
 
-export const MyVotesIcon = (props) => (
-    <FontAwesome6 name="chart-simple" {...props} />
-)
+export const MyVotesIcon = ({ size = 24, color = 'black', ...rest }) => (
+  <FontAwesome6 name="chart-simple" size={size} color={color} {...rest} />
+);
 
-export const CreateIcon = (props) => (
-    <Ionicons name="add-circle" {...props} />
-)
+export const CreateIcon = ({ size = 24, color = 'black', ...rest }) => (
+  <Ionicons name="add-circle" size={size} color={color} {...rest} />
+);
 
-export const ProfileIcon = (props) => (
-    <MaterialIcons name="account-circle" {...props} />
-)
+export const ProfileIcon = ({ size = 24, color = 'black', ...rest }) => (
+  <MaterialIcons name="account-circle" size={size} color={color} {...rest} />
+);
 
-export const SearchIcon = (props) => (
-    <AntDesign name="search1" {...props} />
-)
+export const SearchIcon = ({ size = 24, color = 'black', ...rest }) => (
+  <AntDesign name="search1" size={size} color={color} {...rest} />
+);
 
-export const PopularIcon = (props) => (
-    <Ionicons name="flame" {...props} />
-)
+export const PopularIcon = ({ size = 24, color = 'black', ...rest }) => (
+  <Ionicons name="flame" size={size} color={color} {...rest} />
+);
 
-export const SportsIcon = (props) => (
-    <MaterialIcons name="sports-soccer" size={24} color="black" />
-)
+export const SportsIcon = ({ size = 24, color = 'black', ...rest }) => (
+  <MaterialIcons name="sports-soccer" size={size} color={color} {...rest} />
+);
 
-export const PoliticsIcon = (props) => (
-    <MaterialIcons name="how-to-vote" {...props} />
-)
+export const PoliticsIcon = ({ size = 24, color = 'black', ...rest }) => (
+  <MaterialIcons name="how-to-vote" size={size} color={color} {...rest} />
+);
 
-export const TechnologyIcon = (props) => (
-    <MaterialIcons name="devices" {...props} />
-)
+export const TechnologyIcon = ({ size = 24, color = 'black', ...rest }) => (
+  <MaterialIcons name="devices" size={size} color={color} {...rest} />
+);
 
-export const CinemaIcon = (props) => (
-    <MaterialCommunityIcons name="movie-roll" {...props} />
-)
+export const CinemaIcon = ({ size = 24, color = 'black', ...rest }) => (
+  <MaterialCommunityIcons name="movie-roll" size={size} color={color} {...rest} />
+);
 
-export const EconomyIcon = (props) => (
-    <FontAwesome5 name="coins" {...props} />
-)
+export const EconomyIcon = ({ size = 24, color = 'black', ...rest }) => (
+  <FontAwesome5 name="coins" size={size} color={color} {...rest} />
+);
 
 export const ClockIcon = (props) => (
     <AntDesign name="clockcircle" {...props} />
@@ -74,3 +75,11 @@ export const ShareIcon = (props) => (
 export const CircleIcon = (props) => (
     <FontAwesome name="circle" {...props} />
 )
+
+export const MusicIcon = ({ size = 24, color = 'black', ...rest }) => (
+    <Ionicons name="musical-notes-sharp" size={size} color={color} {...rest}/>
+);
+
+export const NatureIcon = ({ size = 24, color = 'black', ...rest }) => (
+    <MaterialCommunityIcons name="leaf" size={size} color={color} {...rest}/>
+);

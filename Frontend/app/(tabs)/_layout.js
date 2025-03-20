@@ -1,5 +1,5 @@
-import {Tabs} from 'expo-router';
-import {View} from 'react-native';
+import {Tabs, Link} from 'expo-router';
+import {View, Pressable} from 'react-native';
 import {HomeIcon, MyVotesIcon, CreateIcon, ProfileIcon} from "../../components/icons";
 import {colors} from "../../styles/colors";
 
@@ -18,12 +18,13 @@ export default function TabsLayout(){
                 title: 'Mis votaciones',
                 tabBarIcon: ({color}) => <MyVotesIcon size={30} color={color}/>,
             }}/>
-            <Tabs.Screen
+             <Tabs.Screen
             name="create"
             options={{
                 title: 'Crear',
                 tabBarIcon: ({color}) => <CreateIcon size={30} color={color}/>,
             }}/>
+            
             <Tabs.Screen
             name="profile"
             options={{

@@ -1,7 +1,10 @@
 {
   "dependencies": {
     "cors": "^2.8.5",
+    "expo": "^52.0.37",
     "express": "^4.21.2",
-    "mongoose": "^8.12.1"
+    "mongoose": "^8.12.1",
+    "nativewind": "^4.1.23",
+    "tailwindcss": "^3.4.17"
   }
 }

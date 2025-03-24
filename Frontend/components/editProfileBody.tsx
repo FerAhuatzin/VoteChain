@@ -71,7 +71,7 @@ export const EditBody = ({ user }: Props) => {
         />
 
           <TouchableOpacity style={styles.button} onPress={() => router.back()}>
-            <Text style={{ color: "white", fontSize: 16,}}>Votar ahora</Text>
+            <Text style={{ color: "white", fontSize: 16,}}>Guardar cambios</Text>
           </TouchableOpacity>
       
     </View>

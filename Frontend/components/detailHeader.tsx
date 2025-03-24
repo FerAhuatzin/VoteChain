@@ -16,7 +16,7 @@ export const DetailHeader = ({ imagen}: props) => {
   return (
     <SafeAreaView style={{ backgroundColor: "white" }}>
       <View>
-        <Image source={imagen} style={styles.image} />
+        <Image source={{uri: imagen}} style={styles.image} />
         <TouchableOpacity
           style={{
             position: "absolute",

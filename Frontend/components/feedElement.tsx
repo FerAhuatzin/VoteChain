@@ -16,7 +16,7 @@ export const FeedItem = ({ poll }: props) => {
     <Link href={`/polls/${poll.id}`} asChild>
       <TouchableOpacity>
         <View style={styles.elementWrapper}>
-          <Image source={poll.imagen} style={styles.image} />
+          <Image source={{uri: poll.imagen}} style={styles.image} />
           <TouchableOpacity
             style={{
               position: "absolute",
@@ -41,7 +41,7 @@ export const FeedItem = ({ poll }: props) => {
           <Text style={styles.title}>{poll.titulo}</Text>
           <View style={styles.captions}>
             <ClockIcon size={14} />
-            <Text style={{ paddingLeft: 5, fontSize: 14 }}>
+            <Text style={{ paddingLeft: 5}}>
               {poll.fechaFin}
             </Text>
           </View>
@@ -64,8 +64,7 @@ const styles = StyleSheet.create({
   },
   title: {
     marginTop: 5,
-    fontSize: 18,
-    fontWeight: "medium",
+    fontWeight: "condensedBold",
   },
   captions: {
     flexDirection: "row",

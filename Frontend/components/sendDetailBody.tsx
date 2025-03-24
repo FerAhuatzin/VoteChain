@@ -51,7 +51,7 @@ export const SendBody = ({ votes }: Props) => {
           disabled={!selectedOption}
           onPress={() => handleDismiss()}
         >
-          <Text style={{ color: "white", fontSize: 20 }}>
+          <Text style={{ color: "white", fontSize: 16 }}>
             Confirmar voto
           </Text>
         </TouchableOpacity>
@@ -74,14 +74,14 @@ const styles = StyleSheet.create({
   optionButton: {
     backgroundColor: "#f0f0f0",
     padding: 20,
-    borderRadius: 15,
+    borderRadius: 20,
     marginBottom: 10,
   },
   selectedOption: {
     backgroundColor: colors.primary,
   },
   optionText: {
-    fontSize: 18,
+    fontSize: 16,
     color: "#333",
   },
   selectedOptionText: {
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: "100%",
-    height: 60,
+    height: 55,
     backgroundColor: colors.primary,
     justifyContent: "center",
     alignItems: "center",

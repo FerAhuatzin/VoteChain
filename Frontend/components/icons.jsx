@@ -83,3 +83,7 @@ export const MusicIcon = ({ size = 24, color = 'black', ...rest }) => (
 export const NatureIcon = ({ size = 24, color = 'black', ...rest }) => (
     <MaterialCommunityIcons name="leaf" size={size} color={color} {...rest}/>
 );
+
+export const NextIcon = (props) => (
+    <MaterialIcons name="navigate-next" {...props}/>
+)

@@ -10,11 +10,7 @@ import {
 import { colors } from "../styles/colors";
 import { ClockIcon } from "./icons";
 import { BarChart } from "react-native-chart-kit";
-import { Link, useRouter } from "expo-router";
-
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
-
+import { useRouter } from "expo-router";
 interface props {
   poll: any;
   votes: any;
@@ -42,13 +38,13 @@ export const DetailBody = ({ poll, votes, user }: props) => {
         <Text style={styles.title}>{poll.titulo}</Text>
         <View style={styles.captions}>
           <ClockIcon size={14} />
-          <Text style={{ paddingLeft: 5, fontSize: 14 }}>{poll.fechaFin}</Text>
+          <Text style={{ paddingLeft: 5 }}>{poll.fechaFin}</Text>
         </View>
         <View style={styles.line} />
         <Text>{poll.descripcion}</Text>
         <View style={styles.line} />
         <View style={styles.profile}>
-          <Image source={user.imagen} style={styles.image} />
+          <Image source={{uri: user.imagen}} style={styles.image} />
           <Text style={{ padding: 10 }}>Creador: {user.nombre}</Text>
         </View>
         <View style={styles.line} />
@@ -76,7 +72,7 @@ export const DetailBody = ({ poll, votes, user }: props) => {
         <TouchableOpacity
           style={styles.button}
           onPress={() => router.push(`/polls/execute/${poll.id}`)}>
-          <Text style={{ color: "white", fontSize: 20 }}>Votar ahora</Text>
+          <Text style={{ color: "white", fontSize: 16 }}>Votar ahora</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -108,15 +104,15 @@ const styles = StyleSheet.create({
   },
   button: {
     width: "100%",
-    height: 60,
+    height: 55,
     backgroundColor: colors.primary,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 20,
   },
   image: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     borderRadius: 100,
   },
   profile: {

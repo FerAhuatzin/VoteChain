@@ -4,6 +4,7 @@ import { pollsExample, votesExample} from "../../../example-data/polls-example";
 import { DetailHeader } from "../../../components/detailHeader";
 import { SendBody } from "../../../components/sendDetailBody";
 import { Stack } from "expo-router";
+import React from 'react';
 
 export default function Detail() {
   const { pollId } = useLocalSearchParams();
@@ -15,7 +16,7 @@ export default function Detail() {
 
   if (!poll) {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <View style={{ flex: 1, backgroundColor: "white" }}>
         <Text>Votación no encontrada</Text>
       </View>
     );

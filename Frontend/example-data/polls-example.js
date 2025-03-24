@@ -1,3 +1,4 @@
+import { Image } from "react-native";
 import superbowlImage from "./assets/superbowl.webp";
 import chatvsdeepseekImage from "./assets/chatdeepseek.png";
 import trumpImage from "./assets/trump.jpg";
@@ -15,7 +16,7 @@ export const pollsExample = [
     fechaInicio: "2021-10-01",
     fechaFin: "2025-02-09",
     estado: "activa",
-    imagen: superbowlImage,
+    imagen: Image.resolveAssetSource(superbowlImage).uri,
   },
   {
     id: 2,
@@ -28,7 +29,7 @@ export const pollsExample = [
     fechaInicio: "2021-10-01",
     fechaFin: "2025-02-09",
     estado: "activa",
-    imagen: chatvsdeepseekImage,
+    imagen: Image.resolveAssetSource(chatvsdeepseekImage).uri,
   },
   {
     id: 3,
@@ -41,7 +42,7 @@ export const pollsExample = [
     fechaInicio: "2021-10-01",
     fechaFin: "2025-02-09",
     estado: "activa",
-    imagen: trumpImage,
+    imagen: Image.resolveAssetSource(trumpImage).uri,
   },
 ];
 
@@ -90,8 +91,8 @@ export const userExample = {
   id: 1,
   nombre: "Fer Ahuatzin",
   edad: 21,
-  email: "f126ag",
+  email: "f126ag@gmail.com",
   contraseña: "Hola123",
   fechaRegistro: "12/12/2021",
-  imagen: snoopy,
+  imagen: Image.resolveAssetSource(snoopy).uri,
 };

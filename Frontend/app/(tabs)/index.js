@@ -1,4 +1,4 @@
-import { View} from "react-native";
+import { View, Image} from "react-native";
 import { HomeHeader } from "../../components/homeHeader";
 import { Feed } from "../../components/feed";
 import { Stack } from "expo-router";

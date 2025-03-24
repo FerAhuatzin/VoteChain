@@ -87,3 +87,11 @@ export const NatureIcon = ({ size = 24, color = 'black', ...rest }) => (
 export const NextIcon = (props) => (
     <MaterialIcons name="navigate-next" {...props}/>
 )
+
+export const PencilIcon = (props) => (
+  <MaterialCommunityIcons name="pencil" {...props}/>
+)
+
+export const VoteIcon = (props) => (
+  <MaterialCommunityIcons name="vote" {...props}/>
+)

@@ -21,8 +21,8 @@ export const ProfileHeader = ({ user }: props) => {
 
 const styles = StyleSheet.create({
   header_title: {
-    fontSize: 25,
-    marginBottom: 20,
+        height: 60,
+        fontSize: 25,
   },
   image: {
     width: 60,

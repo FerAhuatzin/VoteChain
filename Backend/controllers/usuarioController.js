@@ -27,3 +27,19 @@ exports.eliminarUsuario = async (req, res) => {
     await Usuario.findByIdAndDelete(id);
     res.status(200).json({ mensaje: "Usuario eliminado" });
 };
+
+exports.obtenerUsuarioPorId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const usuario = await  Usuario.findById(id);
+    
+        if (!usuario) {
+          return res.status(404).json({ error: "❌ Votación no encontrada" });
+        }
+    
+        res.status(200).json(usuario);
+      } catch (error) {
+        console.error("❌ Error al obtener votación por ID:", error);
+        res.status(500).json({ error: "Error interno al obtener la votación" });
+      }
+};

@@ -7,8 +7,12 @@ const {
   obtenerVotaciones,
   actualizarVotacion,
   eliminarVotacion,
+  obtenerVotacionPorId,
+  obtenerVotacionesPorCategoria,
+  obtenerVotacionesCreadasPorUsuario,
+  obtenerVotacionesVotadasPorUsuario,
 } = require("../controllers/votacionController");
-
+const validarId = require("../commonMiddlewares/idValidation")
 const router = express.Router();
 
 // Configurar almacenamiento en Cloudinary
@@ -29,19 +33,16 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
-// Middleware para validar ObjectId en MongoDB
-const validarId = (req, res, next) => {
-  const { id } = req.params;
-  if (!id.match(/^[0-9a-fA-F]{24}$/)) {
-    return res.status(400).json({ error: "ID inválido" });
-  }
-  next();
-};
+
 
 // Definir rutas con validación de ID cuando sea necesario
 router.post("/crear-votacion", upload.single("imagen"), crearVotacion);
 router.get("/obtener-votaciones", obtenerVotaciones);
 router.put("/actualizar-votacion/:id", validarId, upload.single("imagen"), actualizarVotacion);
 router.delete("/eliminar-votacion/:id", validarId, eliminarVotacion);
+router.get("/obtener-votacion/:id", validarId, obtenerVotacionPorId);
+router.get("/obtener-votaciones-por-categoria/:categoria", obtenerVotacionesPorCategoria);
+router.get("/obtener-votaciones-creadas-por-usuario/:id", validarId, obtenerVotacionesCreadasPorUsuario);
+router.get("/obtener-votaciones-votadas-por-usuario/:id", validarId, obtenerVotacionesVotadasPorUsuario);
 
 module.exports = router;

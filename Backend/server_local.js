@@ -1,4 +1,5 @@
 require('dotenv').config();
+const blockchainRoutes = require('./routes/blockchainRoutes');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -55,6 +56,8 @@ app.use(votacionRoutes);
 app.use(invitacionRoutes);
 app.use(opcionRoutes);
 app.use(votoRoutes);
+app.use("/api", blockchainRoutes);
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {

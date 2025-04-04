@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Prueba firma EIP-712</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+  <h2>Prueba de Firma con EIP-712 (MetaMask + Sepolia)</h2>
+  <button onclick="firmar()">Firmar voto</button>
+
+  <pre id="salida"></pre>
+
+  <script>
+    async function firmar() {
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      await provider.send("eth_requestAccounts", []);
+      const signer = provider.getSigner();
+      const address = await signer.getAddress();
+
+      const domain = {
+        name: "VotingSystem",
+        version: "1",
+        chainId: 11155111,
+        verifyingContract: "0x504D4dAF8228D34F4Bb6B4A30B9193EE009432c7"
+      };
+
+      const types = {
+        Vote: [
+          { name: "candidateId", type: "uint256" },
+          { name: "voter", type: "address" }
+        ]
+      };
+
+      const value = {
+        candidateId: 1,
+        voter: address
+      };
+
+      try {
+        const signature = await signer._signTypedData(domain, types, value);
+
+        document.getElementById("salida").textContent =
+          "Voter: " + address + "\n\nSignature:\n" + signature;
+      } catch (err) {
+        console.error(err);
+        alert("Error al firmar: " + err.message);
+      }
+    }
+  </script>
+</body>
+</html>

@@ -61,7 +61,7 @@ exports.obtenerVotaciones = async (req, res) => {
     const votaciones = await Votacion.find();
     res.status(200).json(votaciones);
   } catch (error) {
-    console.error("❌ Error al obtener votaciones:", error);
+    console.error("Error al obtener votaciones:", error);
     res.status(500).json({ error: "Error interno al obtener votaciones" });
   }
 };
@@ -109,12 +109,12 @@ exports.obtenerVotacionPorId = async (req, res) => {
     const votacion = await Votacion.findById(id);
 
     if (!votacion) {
-      return res.status(404).json({ error: "❌ Votación no encontrada" });
+      return res.status(404).json({ error: "Votación no encontrada" });
     }
 
     res.status(200).json(votacion);
   } catch (error) {
-    console.error("❌ Error al obtener votación por ID:", error);
+    console.error("Error al obtener votación por ID:", error);
     res.status(500).json({ error: "Error interno al obtener la votación" });
   }
 };
@@ -125,12 +125,12 @@ exports.obtenerVotacionesPorCategoria = async (req, res) => {
     const votaciones = await Votacion.find({ categoria: categoria });
 
     if (votaciones.length === 0) {
-      return res.status(404).json({ error: "❌ No se encontraron votaciones" });
+      return res.status(404).json({ error: "No se encontraron votaciones" });
     }
 
     res.status(200).json(votaciones);
   } catch (error) {
-    console.error("❌ Error al obtener votaciones por categoría:", error);
+    console.error("Error al obtener votaciones por categoría:", error);
     res.status(500).json({ error: "Error interno al obtener las votaciones" });
   }
 };
@@ -141,12 +141,12 @@ exports.obtenerVotacionesCreadasPorUsuario = async (req, res) => {
     const votaciones = await Votacion.find({ idUsuarioCreador: id });
 
     if (votaciones.length === 0) {
-      return res.status(404).json({ error: "❌ No se encontraron votaciones" });
+      return res.status(404).json({ error: "No se encontraron votaciones" });
     }
 
     res.status(200).json(votaciones);
   } catch (error) {
-    console.error("❌ Error al obtener votaciones creadas por usuario:", error);
+    console.error("Error al obtener votaciones creadas por usuario:", error);
     res.status(500).json({ error: "Error interno al obtener las votaciones" });
   }
 };

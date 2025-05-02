@@ -56,7 +56,7 @@ app.use(votacionRoutes);
 app.use(invitacionRoutes);
 app.use(opcionRoutes);
 app.use(votoRoutes);
-app.use("/api", blockchainRoutes);
+app.use(blockchainRoutes);
 
 
 const PORT = process.env.PORT || 3000;

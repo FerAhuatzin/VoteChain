@@ -138,3 +138,64 @@ exports.obtenerVotoPorTxHash = async (req, res) => {
     return res.status(500).json({ error: "Error interno al buscar la transacción" });
   }
 };
+
+const getTxHashesByVotacion = async (idVotacion) => {
+  const votos = await Voto.find({ idVotacion }, { txHash: 1, _id: 0 });
+  return votos.map(v => v.txHash);
+};
+
+const getCandidateIdFromTx = async (txHash, provider, contractAbi) => {
+  const tx = await provider.getTransaction(txHash);
+  const iface = new ethers.utils.Interface(contractAbi);
+
+  const decoded = iface.parseTransaction({ data: tx.data, value: tx.value });
+  if (decoded.name !== "vote") {
+    throw new Error(`La transacción ${txHash} no es un voto`);
+  }
+
+  return decoded.args.candidateId.toString();
+};
+
+
+const countVotesByCandidate = (candidateIds) => {
+  const counts = {};
+
+  for (const id of candidateIds) {
+    counts[id] = (counts[id] || 0) + 1;
+  }
+
+  return counts;
+};
+
+exports.obtenerConteoPorOpcion = async (req, res) => {
+  try {
+    const { idVotacion } = req.params;
+
+    // Paso 1: Obtener txHash desde Mongo
+    const txHashes = await getTxHashesByVotacion(idVotacion);
+
+    if (txHashes.length === 0) {
+      return res.status(404).json({ message: "No se encontraron votos para esta votación" });
+    }
+
+    // Paso 2: Leer blockchain por cada txHash
+    const candidateIds = [];
+    for (const txHash of txHashes) {
+      try {
+        const candidateId = await getCandidateIdFromTx(txHash, provider, contractAbi);
+        candidateIds.push(candidateId);
+      } catch (err) {
+        console.warn(`Error al procesar tx ${txHash}:`, err.message);
+      }
+    }
+
+    // Paso 3: Contar votos por opción
+    const result = countVotesByCandidate(candidateIds);
+
+    res.status(200).json(result);
+
+  } catch (error) {
+    console.error("Error al obtener conteo por opción:", error);
+    res.status(500).json({ error: "Error interno al contar votos" });
+  }
+};

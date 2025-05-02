@@ -2,18 +2,53 @@ const Voto = require('../models/Voto');
 const Opcion = require('../models/Opcion');
 const mongoose = require('mongoose');
 
-exports.crearVoto = async (req, res) => {
-    try {
-        const { idVotacion, idOpcion, idUsuario } = req.body;
+const { DefenderRelayProvider } = require("defender-relay-client/lib/ethers");
+const { ethers } = require("ethers");
+require("dotenv").config();
 
-        const nuevoVoto = new Voto({ idVotacion, idOpcion, idUsuario });
-        await nuevoVoto.save();
-
-        res.status(201).json({ mensaje: "Voto registrado", voto: nuevoVoto });
-    } catch (error) {
-        res.status(500).json({ error: "Error al registrar voto" });
-    }
+const credentials = {
+  apiKey: process.env.DEFENDER_API_KEY,
+  apiSecret: process.env.DEFENDER_API_SECRET,
 };
+
+const provider = new DefenderRelayProvider(credentials);
+const contractAbi = require("../abi/VotingSystem.json");
+const contractAddress = process.env.CONTRACT_ADDRESS;
+const readContract = new ethers.Contract(contractAddress, contractAbi, provider);
+
+exports.crearVoto = async (req, res) => {
+  try {
+    const { idVotacion, idOpcion, idUsuario, voter, signature } = req.body;
+
+    if (!voter || !signature) {
+      return res.status(400).json({ error: "Se requiere 'voter' y 'signature'" });
+    }
+
+    // Enviar la transacción a blockchain
+    const tx = await readContract.connect(provider.getSigner()).vote(idOpcion, voter, signature);
+
+    console.log("Voto enviado a blockchain. TX Hash:", tx.hash);
+
+    // NO uses await tx.wait() para no bloquear al usuario
+    // Defender Relay maneja la confirmación internamente
+
+    // Guardar en MongoDB
+    const nuevoVoto = new Voto({
+      idVotacion,
+      idUsuario,
+      txHash: tx.hash,
+    });
+
+    await nuevoVoto.save();
+
+    res.status(201).json({ mensaje: "Voto registrado", voto: nuevoVoto });
+
+  } catch (error) {
+    console.error("Error al registrar voto:", error);
+    res.status(500).json({ error: "Error al registrar voto" });
+  }
+};
+
 
 exports.obtenerVotosPorVotacion = async (req, res) => {
     const { id } = req.params;
@@ -61,4 +96,45 @@ exports.obtenerVotosPorVotacion = async (req, res) => {
       console.error("Error al obtener los votos:", error);
       res.status(500).json({ error: "Error interno del servidor" });
     }
-  };
+};
+
+// NUEVA FUNCIÓN: obtenerVotoPorTxHash
+exports.obtenerVotoPorTxHash = async (req, res) => {
+  try {
+    const { txHash } = req.params;
+
+    console.log("Buscando información de la transacción:", txHash);
+
+    const tx = await provider.getTransaction(txHash);
+
+    if (!tx || !tx.data) {
+      return res.status(404).json({ error: "No se encontró la transacción o no contiene datos" });
+    }
+
+    const iface = new ethers.utils.Interface(contractAbi);
+
+    // Decodeamos el input
+    const decoded = iface.parseTransaction({ data: tx.data, value: tx.value });
+
+    if (decoded.name !== "vote") {
+      return res.status(400).json({ error: "La transacción no es de tipo 'vote'" });
+    }
+
+    const { candidateId, voter, signature } = decoded.args;
+
+    const block = await provider.getBlock(tx.blockNumber);
+
+    return res.status(200).json({
+      candidateId: candidateId.toString(),
+      voter: voter,
+      signature: signature,
+      txHash: txHash,
+      blockNumber: tx.blockNumber,
+      timestamp: block.timestamp,
+    });
+
+  } catch (error) {
+    console.error("Error al decodificar la transacción:", error);
+    return res.status(500).json({ error: "Error interno al buscar la transacción" });
+  }
+};

@@ -95,3 +95,25 @@ export const PencilIcon = (props) => (
 export const VoteIcon = (props) => (
   <MaterialCommunityIcons name="vote" {...props}/>
 )
+export const CloseIcon = (props) => (
+  <Ionicons name="close-circle" {...props} />
+)
+export const CameraIcon = (props) => (
+  <Ionicons name="camera" {...props}/>
+)
+export const GalleryIcon = (props) => (
+  <FontAwesome5 name="images" {...props}/>
+)
+
+export const CheckIcon = (props) => (
+  <AntDesign name="check" {...props} />
+)
+
+export const WhatsappIcon = (props) => (
+  <FontAwesome name="whatsapp" {...props} />
+)
+
+export const MailIcon = (props) => (
+  <MaterialCommunityIcons name="gmail" size={24} color="black"  {...props} />
+)
+

@@ -46,7 +46,11 @@ const votacionSchema = new mongoose.Schema({
         type: String, 
         enum: ["activa", "finalizada", "cancelada"], 
         default: "activa" 
-    }
+    },
+    opciones: [{ 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Opcion'  // <--- Asegúrate de que este sea el nombre exacto del modelo de opciones
+    }]
 }, { collection: 'votaciones', timestamps: true });
 
 module.exports = mongoose.model('Votacion', votacionSchema);

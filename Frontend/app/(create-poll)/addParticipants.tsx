@@ -25,6 +25,7 @@ export default function AddParticipants() {
   useEffect(() => {
     const participants = options.map(opt => opt.text.trim()).filter(Boolean);
     dispatch({ type: 'SET_PARTICIPANTS', payload: participants });
+    dispatch({ type: 'SET_OPTIONS', payload: participants });  // ← AGREGADO
   }, [options, dispatch]);
 
   const translateAnim = useRef(new Animated.Value(0)).current;

@@ -1,13 +1,16 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import "./global.css"
+import "./global.css";
+import { PollProvider } from './components/pollContext';  // ✅ ajusta la ruta si es necesario
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text className="text-2xl">Hello World</Text>
-      <StatusBar style="auto" />
-    </View>
+    <PollProvider>
+      <View style={styles.container}>
+        <Text className="text-2xl">Hello World</Text>
+        <StatusBar style="auto" />
+      </View>
+    </PollProvider>
   );
 }
 

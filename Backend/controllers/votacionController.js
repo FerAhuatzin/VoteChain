@@ -1,56 +1,93 @@
 const Votacion = require("../models/Votacion");
 const Usuario = require("../models/Usuario");
 const Voto = require("../models/Voto");
+const Opcion = require('../models/Opcion');
 const mongoose = require('mongoose');
 const { v2: cloudinary } = require("cloudinary");
 
-// Crear votación con imagen
 exports.crearVotacion = async (req, res) => {
-  try {
-    // 🔹 Asegurar que los datos lleguen bien, ya sea en JSON o Form-Data
-    let emailUsuario = req.body.emailUsuario || req.body["emailUsuario"];
-    let titulo = req.body.titulo || req.body["titulo"];
-    let descripcion = req.body.descripcion || req.body["descripcion"];
-    let tipo = req.body.tipo || req.body["tipo"];
-    let fechaInicio = req.body.fechaInicio || req.body["fechaInicio"];
-    let fechaFin = req.body.fechaFin || req.body["fechaFin"];
+  //const session = await mongoose.startSession();
+  //session.startTransaction();
 
-    if (!emailUsuario) {
-      return res.status(400).json({ error: "emailUsuario es requerido" });
+  try {
+    const {
+      emailUsuario,
+      titulo,
+      descripcion,
+      tipo,
+      fechaInicio,
+      fechaFin,
+      opciones // aquí esperamos un array (ya parseado si viene de JSON)
+    } = req.body;
+
+    if (!emailUsuario || !opciones || opciones.length === 0) {
+      return res.status(400).json({ error: "emailUsuario y opciones son requeridos" });
     }
 
-    // Buscar el usuario por email
     const usuario = await Usuario.findOne({ email: emailUsuario });
     if (!usuario) {
       return res.status(404).json({ error: "Usuario no encontrado" });
     }
 
-    // Subir imagen a Cloudinary si se proporciona
     let imagenUrl = null;
+
+    // Si viene archivo (backend sube), si no, usa el link del body (frontend subió a Cloudinary)
     if (req.file) {
       const resultado = await cloudinary.uploader.upload(req.file.path, {
         folder: "votaciones",
       });
       imagenUrl = resultado.secure_url;
+    } else if (req.body.imagen) {
+      imagenUrl = req.body.imagen; // el frontend ya envió un link Cloudinary
     }
 
     const nuevaVotacion = new Votacion({
       idUsuarioCreador: usuario._id,
+      emailUsuario,
       titulo,
       descripcion,
       tipo,
       fechaInicio: new Date(fechaInicio),
       fechaFin: new Date(fechaFin),
-      imagen: imagenUrl, // Guardamos la URL de Cloudinary
+      imagen: imagenUrl,
       estado: "activa",
     });
 
-    await nuevaVotacion.save();
+    const savedVotacion = await nuevaVotacion.save();
+
+
+    let opcionesArray = opciones;
+
+    if (typeof opciones === 'string') {
+      try {
+        opcionesArray = JSON.parse(opciones);
+      } catch (err) {
+        return res.status(400).json({ error: "Las opciones enviadas no son un JSON válido" });
+      }
+    }
+
+    if (!Array.isArray(opcionesArray) || opcionesArray.length === 0) {
+      return res.status(400).json({ error: "opciones debe ser un arreglo no vacío" });
+    }
+    // Procesar las opciones como array de strings
+    const opcionesDocs = opcionesArray.map(opcion => ({
+      idVotacion: savedVotacion._id,
+      descripcion: opcion
+    }));
+
+    await Opcion.insertMany(opcionesDocs);
+
+    //await session.commitTransaction();
+    //session.endSession();
+
     res.status(201).json({
-      mensaje: "Votación creada exitosamente",
-      votacion: nuevaVotacion,
+      mensaje: "Votación y opciones creadas exitosamente",
+      votacion: savedVotacion,
     });
+
   } catch (error) {
+    //await session.abortTransaction();
+    //session.endSession();
     console.error("Error al crear la votación:", error);
     res.status(500).json({ error: "Error interno al crear la votación" });
   }
@@ -74,15 +111,15 @@ exports.actualizarVotacion = async (req, res) => {
     });
 
     if (!votacionActualizada) {
-      return res.status(404).json({ error: "❌ Votación no encontrada" });
+      return res.status(404).json({ error: "Votación no encontrada" });
     }
 
     res.status(200).json({
-      mensaje: "✅ Votación actualizada",
+      mensaje: "Votación actualizada",
       votacion: votacionActualizada,
     });
   } catch (error) {
-    console.error("❌ Error al actualizar votación:", error);
+    console.error("Error al actualizar votación:", error);
     res.status(500).json({ error: "Error interno al actualizar la votación" });
   }
 };
@@ -93,12 +130,12 @@ exports.eliminarVotacion = async (req, res) => {
     const votacionEliminada = await Votacion.findByIdAndDelete(id);
 
     if (!votacionEliminada) {
-      return res.status(404).json({ error: "❌ Votación no encontrada" });
+      return res.status(404).json({ error: "Votación no encontrada" });
     }
 
-    res.status(200).json({ mensaje: "✅ Votación eliminada" });
+    res.status(200).json({ mensaje: "Votación eliminada" });
   } catch (error) {
-    console.error("❌ Error al eliminar votación:", error);
+    console.error("Error al eliminar votación:", error);
     res.status(500).json({ error: "Error interno al eliminar la votación" });
   }
 };

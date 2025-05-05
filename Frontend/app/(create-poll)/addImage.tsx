@@ -1,19 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { View, TouchableOpacity, StyleSheet, Alert, Image } from 'react-native';
+import React, { useState } from 'react';
+import { View, TouchableOpacity, StyleSheet, Alert, Image, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { usePoll } from '../../components/pollContext';
 import CreatePollLayout from '../../components/createPollLayout';
 import { CameraIcon, GalleryIcon } from '../../components/icons';
 
+
 export default function AddImage() {
   const router = useRouter();
   const { state, dispatch } = usePoll();
   const [selectedImage, setSelectedImage] = useState(state.image || null);
+  const [loading, setLoading] = useState(false);
+
+  const handleImagePicked = async (result) => {
+    if (!result.canceled) {
+      const asset = result.assets[0];
+      setSelectedImage(asset.uri);
   
-  useEffect(() => {
-    dispatch({ type: 'SET_IMAGE', payload: selectedImage });
-  }, [selectedImage, dispatch]);
+      // Aquí SOLO guardamos el URI en el contexto
+      dispatch({
+        type: 'SET_IMAGE',
+        payload: asset.uri
+      });
+    }
+  };
+  
 
   const openCamera = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
@@ -28,9 +40,7 @@ export default function AddImage() {
       quality: 1,
     });
 
-    if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
-    }
+    await handleImagePicked(result);
   };
 
   const openGallery = async () => {
@@ -41,23 +51,21 @@ export default function AddImage() {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'], 
+      mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [4, 4],
       quality: 1,
     });
 
-    if (!result.canceled) {
-      setSelectedImage(result.assets[0].uri);
-    }
+    await handleImagePicked(result);
   };
 
-  const isNextEnabled = selectedImage !== null;
+  const isNextEnabled = selectedImage !== null && !loading;
 
   return (
     <CreatePollLayout
-      title="Agrega una imagen que describa  tu votación."
-      progress={4/7}
+      title="Agrega una imagen que describa tu votación."
+      progress={4 / 7}
       onBack={() => router.back()}
       onNext={() => router.push('/(create-poll)/endDate')}
       isNextEnabled={isNextEnabled}
@@ -71,7 +79,9 @@ export default function AddImage() {
           <GalleryIcon size={30} color="white" />
         </TouchableOpacity>
 
-        {selectedImage && (
+        {loading && <ActivityIndicator size="large" color="#000" style={{ marginTop: 16 }} />}
+
+        {selectedImage && !loading && (
           <Image source={{ uri: selectedImage }} style={styles.preview} />
         )}
       </View>

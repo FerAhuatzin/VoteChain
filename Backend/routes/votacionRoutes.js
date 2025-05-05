@@ -1,5 +1,6 @@
 const express = require("express");
 const multer = require("multer");
+const upload = multer({ dest: 'uploads/' });
 const { v2: cloudinary } = require("cloudinary");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const {
@@ -31,12 +32,10 @@ const storage = new CloudinaryStorage({
   },
 });
 
-const upload = multer({ storage });
-
 
 
 // Definir rutas con validación de ID cuando sea necesario
-router.post("/crear-votacion", upload.single("imagen"), crearVotacion);
+router.post('/crear-votacion', upload.single('imagen'), crearVotacion);
 router.get("/obtener-votaciones", obtenerVotaciones);
 router.put("/actualizar-votacion/:id", validarId, upload.single("imagen"), actualizarVotacion);
 router.delete("/eliminar-votacion/:id", validarId, eliminarVotacion);

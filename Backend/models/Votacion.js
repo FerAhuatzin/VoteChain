@@ -6,19 +6,23 @@ const votacionSchema = new mongoose.Schema({
         ref: 'Usuario', 
         required: true 
     },
-    emailUsuario: { // 🔹 No se almacena en el controller, pero si se quiere guardar
+    emailUsuario: { 
         type: String,
-        trim: true
+        trim: true,
+        required: true,
+        match: /.+\@.+\..+/
     },
     titulo: { 
         type: String, 
         required: true, 
-        trim: true 
+        trim: true,
+        minlength: 3
     },
     descripcion: { 
         type: String, 
         required: true, 
-        trim: true 
+        trim: true,
+        minlength: 5
     },
     tipo: { 
         type: String, 
@@ -28,14 +32,14 @@ const votacionSchema = new mongoose.Schema({
     fechaInicio: { 
         type: Date, 
         required: true,
-        default: Date.now // 🔹 Se asegura que siempre tenga un valor
+        default: Date.now
     },
     fechaFin: { 
         type: Date, 
         required: true 
     },
     imagen: { 
-        type: String, // 🔹 URL de la imagen en Cloudinary
+        type: String,
         default: null 
     },
     estado: { 
@@ -43,6 +47,6 @@ const votacionSchema = new mongoose.Schema({
         enum: ["activa", "finalizada", "cancelada"], 
         default: "activa" 
     }
-}, { collection: 'votaciones' }); // 🔹 Especificar la colección aquí
+}, { collection: 'votaciones', timestamps: true });
 
-module.exports = mongoose.model('Votacion', votacionSchema, 'votaciones');
+module.exports = mongoose.model('Votacion', votacionSchema);

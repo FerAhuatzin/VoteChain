@@ -1,10 +1,13 @@
 import { Stack } from 'expo-router/stack';
+import { PollProvider } from '../components/pollContext';  // ✅ ajusta la ruta si es necesario
 
 export default function Layout() {
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name = "(create-poll)" options = {{headerShown: false}}/>
-    </Stack>
+    <PollProvider>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(create-poll)" options={{ headerShown: false }} />
+      </Stack>
+    </PollProvider>
   );
 }

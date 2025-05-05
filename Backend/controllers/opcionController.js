@@ -1,4 +1,5 @@
 const Opcion = require("../models/Opcion");
+const mongoose = require('mongoose');
 
 exports.crearOpcion = async (req, res) => {
   try {
@@ -16,7 +17,8 @@ exports.crearOpcion = async (req, res) => {
 exports.obtenerOpciones = async (req, res) => {
   const { id } = req.params;
 
-  let query = {idVotacion: id};
+  let query = { idVotacion: new mongoose.Types.ObjectId(id) };
+
   try {
     const opciones = await Opcion.find(query);
 
@@ -28,7 +30,7 @@ exports.obtenerOpciones = async (req, res) => {
 
     res.status(200).json(opciones);
   } catch (error) {
-    console.error(error);
+    console.error("Error al obtener las opciones:", error);
     res.status(500).json({ error: "Error al obtener las opciones" });
   }
 };

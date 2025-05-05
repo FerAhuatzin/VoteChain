@@ -1,13 +1,19 @@
 import { View, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
-import { BackIcon, HeartOutlinedIcon, HeartIcon, ShareIcon, CircleIcon } from "./icons";
+import {
+  BackIcon,
+  HeartOutlinedIcon,
+  HeartIcon,
+  ShareIcon,
+  CircleIcon,
+} from "./icons";
 
 interface props {
   imagen: any;
 }
 
-export const DetailHeader = ({ imagen}: props) => {
+export const DetailHeader = ({ imagen }: props) => {
   const router = useRouter();
   const handleDismiss = () => {
     router.dismiss(1);
@@ -16,7 +22,10 @@ export const DetailHeader = ({ imagen}: props) => {
   return (
     <SafeAreaView style={{ backgroundColor: "white" }}>
       <View>
-        <Image source={{uri: imagen}} style={styles.image} />
+        {imagen ? (
+          <Image source={{ uri: String(imagen) }} style={styles.image} />
+        ) : null}
+
         <TouchableOpacity
           style={{
             position: "absolute",
@@ -33,12 +42,9 @@ export const DetailHeader = ({ imagen}: props) => {
             color={"white"}
             style={{ position: "absolute" }}
           />
-          <BackIcon
-            size={20}
-            color={"black"}
-            style={{ position: "absolute" }}
-          />
+          <BackIcon size={20} color={"black"} style={{ position: "absolute" }} />
         </TouchableOpacity>
+
         <TouchableOpacity
           style={{
             position: "absolute",
@@ -60,6 +66,7 @@ export const DetailHeader = ({ imagen}: props) => {
             style={{ position: "absolute" }}
           />
         </TouchableOpacity>
+
         <TouchableOpacity
           style={{
             position: "absolute",

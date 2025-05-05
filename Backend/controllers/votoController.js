@@ -20,21 +20,22 @@ exports.crearVoto = async (req, res) => {
   try {
     const { idVotacion, idOpcion, idUsuario, voter, signature } = req.body;
 
-    if (!voter || !signature) {
-      return res.status(400).json({ error: "Se requiere 'voter' y 'signature'" });
+    if (!voter || !signature || !idOpcion) {
+      return res.status(400).json({ error: "Se requiere 'voter', 'signature' y 'idOpcion'" });
     }
 
+    // Convertir idOpcion (Mongo ObjectId) a bytes32
+    const opcionBytes32 = ethers.utils.hexZeroPad("0x" + idOpcion, 32);
+
     // Enviar la transacción a blockchain
-    const tx = await readContract.connect(provider.getSigner()).vote(idOpcion, voter, signature);
+    const tx = await readContract.connect(provider.getSigner()).vote(opcionBytes32, voter, signature);
 
     console.log("Voto enviado a blockchain. TX Hash:", tx.hash);
-
-    // NO uses await tx.wait() para no bloquear al usuario
-    // Defender Relay maneja la confirmación internamente
 
     // Guardar en MongoDB
     const nuevoVoto = new Voto({
       idVotacion,
+      idOpcion,   // guardamos el ObjectId original
       idUsuario,
       txHash: tx.hash,
     });
@@ -48,6 +49,7 @@ exports.crearVoto = async (req, res) => {
     res.status(500).json({ error: "Error al registrar voto" });
   }
 };
+
 
 
 exports.obtenerVotosPorVotacion = async (req, res) => {
@@ -153,8 +155,13 @@ const getCandidateIdFromTx = async (txHash, provider, contractAbi) => {
     throw new Error(`La transacción ${txHash} no es un voto`);
   }
 
-  return decoded.args.candidateId.toString();
+  // Convertir a hex limpio
+  const rawCandidateId = decoded.args.candidateId.toString();
+  const hexCandidateId = ethers.BigNumber.from(rawCandidateId).toHexString().replace(/^0x0*/, '');
+
+  return hexCandidateId;  // devuelve el ObjectId en formato Mongo
 };
+
 
 
 const countVotesByCandidate = (candidateIds) => {

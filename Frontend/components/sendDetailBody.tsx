@@ -5,16 +5,16 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Dimensions,
 } from "react-native";
 import { colors } from "../styles/colors";
 import { useRouter } from "expo-router";
 
 interface Props {
-  votes: any;
+  options: any[];
 }
 
-export const SendBody = ({ votes }: Props) => {
+
+export const SendBody = ({ options, idVotacion }: Props & { idVotacion: string }) => {
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
 
@@ -22,43 +22,101 @@ export const SendBody = ({ votes }: Props) => {
     setSelectedOption(descripcion);
   };
 
-  const handleDismiss = () => {
-    router.dismiss(2);
+  const handleConfirmVote = async () => {
+    try {
+      const opcionSeleccionada = options.find(
+        (op) => op.descripcion === selectedOption
+      );
+
+      if (!opcionSeleccionada) {
+        console.error("Opción seleccionada no encontrada");
+        return;
+      }
+
+      const body = {
+        idVotacion,
+        idOpcion: opcionSeleccionada._id,
+        idUsuario: "67c79925289d45ed6e584a27", // fijo por ahora
+        voter: "0xC3dA41434d4B2bcB2B25Ea325b64cEFc7a2cEf24", // vacío
+        signature: "0x2c2a8c1455fab862f3231215a0580c8805b5fb0ddc95f22ca1f8bff720ad094a01d0701cda43889661681683b1cbd32901d0725582d46f58478dbaf6068399391c", // vacío
+      };
+
+      console.log("Enviando voto:", body); // debug
+
+      const res = await fetch("http://192.168.1.5:3000/registrar-voto", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      if (res.ok) {
+        console.log("Voto registrado correctamente");
+        router.dismiss(2);
+      } else {
+        console.error("Error al registrar voto");
+      }
+    } catch (error) {
+      console.error("Error en la solicitud:", error);
+    }
   };
+
+  const opciones = options || [];
 
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={styles.title}>Selecciona tu opción</Text>
-        {votes.opciones.map((opcion, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[
-              styles.optionButton,
-              selectedOption === opcion.descripcion && styles.selectedOption,
-            ]}
-            onPress={() => handleSelect(opcion.descripcion)}
-          >
-            <Text style={[styles.optionText,
-              selectedOption === opcion.descripcion && styles.selectedOptionText,]}>{opcion.descripcion}</Text>
-          </TouchableOpacity>
-        ))}
+
+        {Array.isArray(opciones) && opciones.length > 0 ? (
+          opciones.map((opcion, index) => (
+            <TouchableOpacity
+              key={opcion._id || index}
+              style={[
+                styles.optionButton,
+                selectedOption === String(opcion.descripcion)
+                  ? styles.selectedOption
+                  : null,
+              ]}
+              onPress={() => handleSelect(String(opcion.descripcion))}
+            >
+              <Text
+                style={[
+                  styles.optionText,
+                  selectedOption === String(opcion.descripcion)
+                    ? styles.selectedOptionText
+                    : null,
+                ]}
+              >
+                {typeof opcion.descripcion === "string" ||
+                typeof opcion.descripcion === "number"
+                  ? opcion.descripcion
+                  : JSON.stringify(opcion.descripcion)}
+              </Text>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text style={{ textAlign: "center", marginVertical: 10 }}>
+            No hay opciones disponibles.
+          </Text>
+        )}
       </ScrollView>
 
       <View style={{ paddingVertical: 20 }}>
         <TouchableOpacity
-          style={styles.button}
+          style={[
+            styles.button,
+            !selectedOption ? { opacity: 0.5 } : null,
+          ]}
           disabled={!selectedOption}
-          onPress={() => handleDismiss()}
+          onPress={handleConfirmVote}
         >
-          <Text style={{ color: "white", fontSize: 16 }}>
-            Confirmar voto
-          </Text>
+          <Text style={{ color: "white", fontSize: 16 }}>Confirmar voto</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -94,6 +152,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 20,
-    opacity: 1,
   },
 });
+

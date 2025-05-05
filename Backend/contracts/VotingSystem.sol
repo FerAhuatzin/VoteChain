@@ -9,7 +9,7 @@ contract VotingSystem is Ownable, EIP712 {
     using ECDSA for bytes32;
 
     struct Candidate {
-        uint id;
+        bytes32 id;
         string name;
         uint voteCount;
     }
@@ -18,7 +18,7 @@ contract VotingSystem is Ownable, EIP712 {
         bool hasVoted;
     }
 
-    mapping(uint => Candidate) public candidates;
+    mapping(bytes32 => Candidate) public candidates;
     mapping(address => Voter) public voters;
     uint public candidatesCount;
 
@@ -40,27 +40,18 @@ contract VotingSystem is Ownable, EIP712 {
     }
 
 
-    function addCandidate(string memory _name) external onlyOwner {
-        candidatesCount++;
-        candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
+    function addCandidate(bytes32 candidateId, string memory _name) external onlyOwner {
+    require(candidates[candidateId].id == bytes32(0), "Candidate already exists");
+    candidates[candidateId] = Candidate(candidateId, _name, 0);
     }
 
-    function vote(uint candidateId, address voter, bytes memory signature) external onlyRelayer {
-        require(!voters[voter].hasVoted, "Voter has already voted");
-        require(candidates[candidateId].id != 0, "Invalid candidate");
-        
-        bytes32 digest = _hashTypedDataV4(keccak256(abi.encode(
-            VOTE_TYPEHASH,
-            candidateId,
-            voter
-        )));
+    function vote(bytes32 candidateId, address voter, bytes memory signature) external onlyRelayer {
+    require(!voters[voter].hasVoted, "Voter has already voted");
+    require(candidates[candidateId].id != bytes32(0), "Invalid candidate");
 
-        address signer = digest.recover(signature);
-        require(signer == voter, "Invalid signature");
+    voters[voter].hasVoted = true;
+    candidates[candidateId].voteCount++;
 
-        voters[voter].hasVoted = true;
-        candidates[candidateId].voteCount++;
-
-        emit Voted(candidateId, voter);
+    emit Voted(candidateId, voter);
     }
 }

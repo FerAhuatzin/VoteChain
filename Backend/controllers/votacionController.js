@@ -140,21 +140,42 @@ exports.eliminarVotacion = async (req, res) => {
   }
 };
 
+const { ethers } = require("ethers");
+
 exports.obtenerVotacionPorId = async (req, res) => {
   try {
+    console.log("ID recibido en req.params:", req.params);
     const { id } = req.params;
-    const votacion = await Votacion.findById(id);
+
+    const votacion = await Votacion.findById(id)
+      .populate('idUsuarioCreador')   // ← para traer datos del usuario
+      .populate('opciones');          // ← para traer opciones
 
     if (!votacion) {
       return res.status(404).json({ error: "Votación no encontrada" });
     }
 
-    res.status(200).json(votacion);
+    const respuesta = {
+      id: votacion._id.toString(),
+      titulo: votacion.titulo,
+      descripcion: votacion.descripcion,
+      usuarioCreador: votacion.idUsuarioCreador?.nombre || "Desconocido",  // ← usa el campo real de tu modelo Usuario
+      imagen: votacion.imagen,
+      fechaFin: votacion.fechaFin,
+      opciones: votacion.opciones.map(opcion => ({
+        id: opcion._id.toString(),   // puedes convertir a string simple, no a BigNumber
+        descripcion: opcion.descripcion
+      }))
+    };
+
+    res.status(200).json(respuesta);
   } catch (error) {
     console.error("Error al obtener votación por ID:", error);
     res.status(500).json({ error: "Error interno al obtener la votación" });
   }
 };
+
+
 
 exports.obtenerVotacionesPorCategoria = async (req, res) => {
   try {

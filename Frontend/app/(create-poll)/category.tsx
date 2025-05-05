@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'expo-router';
 import {
   View,
   Text,
@@ -6,11 +7,12 @@ import {
   StyleSheet,
   FlatList
 } from 'react-native';
+import { usePoll } from '../../components/pollContext';
 
-// 1) Import your icons here:
+
+import CreatePollLayout from '../../components/createPollLayout';
 import {
   SearchIcon,
-  PopularIcon,
   SportsIcon,
   PoliticsIcon,
   CinemaIcon,
@@ -18,9 +20,12 @@ import {
   EconomyIcon,
   MusicIcon,
   NatureIcon,
-} from "../../components/icons.jsx";
+} from '../../components/icons';
 
-export default function CategoryScreen() {
+export default function Category() {
+  const router = useRouter();
+  const { state, dispatch } = usePoll(); 
+
   const categoryData = [
     { id: 'cine', label: 'Cine', icon: CinemaIcon },
     { id: 'deportes', label: 'Deportes', icon: SportsIcon },
@@ -32,37 +37,39 @@ export default function CategoryScreen() {
     { id: 'musica', label: 'Música', icon: MusicIcon },
   ];
 
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
-  const handleSelectCategory = (categoryId) => {
+  useEffect(() => {
+    dispatch({ type: 'SET_CATEGORIES', payload: selectedCategories });
+  }, [selectedCategories, dispatch]);
+
+  const handleSelectCategory = (categoryId: string) => {
     if (selectedCategories.includes(categoryId)) {
       setSelectedCategories(selectedCategories.filter(id => id !== categoryId));
-    } else {
-      if (selectedCategories.length < 3) {
-        setSelectedCategories([...selectedCategories, categoryId]);
-      }
+    } else if (selectedCategories.length < 3) {
+      setSelectedCategories([...selectedCategories, categoryId]);
     }
   };
+
   const renderCategory = ({ item }) => {
     const isSelected = selectedCategories.includes(item.id);
     const IconComponent = item.icon;
 
     return (
+      
       <TouchableOpacity
         onPress={() => handleSelectCategory(item.id)}
         style={[
           styles.categoryItem,
           isSelected && styles.categoryItemSelected
-          
         ]}
       >
         <View style={styles.iconContainer}>
-        <IconComponent
-          color = {isSelected ? "#fff" : "#333"}
-          size = {40}
-          //style={{ width: 30, height: 30 }}
-          fill={isSelected ? '#fff' : '#333'}
-        />
+          <IconComponent
+            color={isSelected ? '#fff' : '#333'}
+            size={40}
+            fill={isSelected ? '#fff' : '#333'}
+          />
         </View>
         <Text
           style={[
@@ -76,16 +83,19 @@ export default function CategoryScreen() {
     );
   };
 
+  const isNextEnabled = selectedCategories.length > 0;
+
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.title}>
-          ¿Cuál de estas categorías describiría mejor tu votación?
-        </Text>
-        <Text style={styles.subtitle}>
-          Selecciona hasta 3 categorías
-        </Text>
-      </View>
+    <CreatePollLayout
+      title="¿Cuál de estas categorías describiría mejor tu votación?"
+      progress={1/7}
+      onBack={() => router.replace('/(tabs)/index')}
+      onNext={() => router.push('/(create-poll)/titleAndDescription')}
+      hideBackButton = {true}
+      isNextEnabled={isNextEnabled}
+    >
+      <Text>Selecciona hasta 3 categorías</Text>
+
 
       <FlatList
         data={categoryData}
@@ -95,85 +105,39 @@ export default function CategoryScreen() {
         columnWrapperStyle={{ justifyContent: 'space-between' }}
         contentContainerStyle={styles.gridContent}
       />
-
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.backButton}>
-          <Text style={styles.footerButtonText}>Atrás</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.nextButton}>
-          <Text style={styles.footerButtonText}>Siguiente</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </CreatePollLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: 16,
-    backgroundColor: '#fff',
-  },
-  
-  header: {
-    marginTop: 20,
+  subtitle: {
+    fontSize: 16,
+    color: '#555',
     marginBottom: 10,
   },
-  title: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 5,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: '#555',
-  },
   gridContent: {
-    paddingBottom: 2,
+    paddingBottom: 10,
   },
   categoryItem: {
     flex: 1,
     alignItems: 'center',
     backgroundColor: '#f2f2f2',
-    marginVertical: 2,
+    marginVertical: 4,
     marginHorizontal: 4,
     paddingVertical: 10,
-    borderRadius: 10,
+    borderRadius: 20,
   },
   categoryItemSelected: {
-    backgroundColor: '#000', 
+    backgroundColor: '#000',
   },
   iconContainer: {
-    marginBottom: 2,
+    marginBottom: 4,
   },
-
   categoryLabel: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#333',
   },
   categoryLabelSelected: {
-    color: '#fff',
-    fontWeight: '600',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 'auto', 
-    marginBottom: 20,
-  },
-  backButton: {
-    backgroundColor: '#e5e5e5',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-  },
-  nextButton: {
-    backgroundColor: '#007aff',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 8,
-  },
-  footerButtonText: {
     color: '#fff',
     fontWeight: '600',
   },

@@ -29,12 +29,12 @@ export default function Category() {
   const categoryData = [
     { id: 'cine', label: 'Cine', icon: CinemaIcon },
     { id: 'deportes', label: 'Deportes', icon: SportsIcon },
-    { id: 'economia', label: 'Economía', icon: EconomyIcon },
-    { id: 'tecnologia', label: 'Tecnología', icon: TechnologyIcon },
-    { id: 'politica', label: 'Política', icon: PoliticsIcon },
+    { id: 'economia', label: 'Economia', icon: EconomyIcon },
+    { id: 'tecnologia', label: 'Tecnologia', icon: TechnologyIcon },
+    { id: 'politica', label: 'Politica', icon: PoliticsIcon },
     { id: 'ambiente', label: 'Ambiente', icon: NatureIcon },
-    { id: 'educacion', label: 'Educación', icon: SearchIcon },
-    { id: 'musica', label: 'Música', icon: MusicIcon },
+    { id: 'educacion', label: 'Educacion', icon: SearchIcon },
+    { id: 'musica', label: 'Musica', icon: MusicIcon },
   ];
 
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);

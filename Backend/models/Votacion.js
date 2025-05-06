@@ -47,6 +47,13 @@ const votacionSchema = new mongoose.Schema({
         enum: ["activa", "finalizada", "cancelada"], 
         default: "activa" 
     },
+
+    categorias: {
+        type: [String],
+        enum: ["cine", "deportes", "economia", "tecnologia", "politica", "ambiente", "educacion", "musica"],
+        default: []
+    },
+
     opciones: [{ 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Opcion'  // <--- Asegúrate de que este sea el nombre exacto del modelo de opciones

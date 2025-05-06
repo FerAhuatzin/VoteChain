@@ -48,6 +48,7 @@ export default function Summary() {
       formData.append('fechaInicio', new Date().toISOString());
       formData.append('fechaFin', state.endDate?.toISOString());
       formData.append('opciones', JSON.stringify(state.participants));
+      formData.append('categorias', JSON.stringify(state.categories));
   
       // Agregar la imagen local solo si no es ya URL
       if (state.image && !state.image.startsWith('http')) {

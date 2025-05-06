@@ -21,7 +21,7 @@ export const pollsExample = [
   {
     id: 2,
     idUsuarioCreador: 1,
-    categoria: "Tecnología",
+    categoria: "Tecnologia",
     titulo: "Deepseek o chatgpt",
     descripcion:
       "Debido a la reciente publicación de deepseek, se ha puesto en duda cual es la mejor IA generativa, esta encuesta esta destinada para averiguarlo",
@@ -34,7 +34,7 @@ export const pollsExample = [
   {
     id: 3,
     idUsuarioCreador: 1,
-    categoria: "Política",
+    categoria: "Politica",
     titulo: "Aranceles trump",
     descripcion:
       "En las últimas semanas se ha hablado mucho sobre los aranceles impuestos por Trump, ¿Crees que es una buena idea?",

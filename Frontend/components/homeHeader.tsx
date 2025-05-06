@@ -29,7 +29,7 @@ const categories = [
     icon: SportsIcon,
   },
   {
-    name: "Política",
+    name: "Politica",
     icon: PoliticsIcon,
   },
   {
@@ -37,11 +37,11 @@ const categories = [
     icon: CinemaIcon,
   },
   {
-    name: "Tecnología",
+    name: "Tecnologia",
     icon: TechnologyIcon,
   },
   {
-    name: "Economía",
+    name: "Economia",
     icon: EconomyIcon,
   },
 ];

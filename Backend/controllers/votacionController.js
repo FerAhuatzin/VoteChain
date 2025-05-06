@@ -6,9 +6,6 @@ const mongoose = require('mongoose');
 const { v2: cloudinary } = require("cloudinary");
 
 exports.crearVotacion = async (req, res) => {
-  //const session = await mongoose.startSession();
-  //session.startTransaction();
-
   try {
     const {
       emailUsuario,
@@ -17,12 +14,31 @@ exports.crearVotacion = async (req, res) => {
       tipo,
       fechaInicio,
       fechaFin,
-      opciones // aquí esperamos un array (ya parseado si viene de JSON)
+      opciones,    // array
+      categorias   
     } = req.body;
 
     if (!emailUsuario || !opciones || opciones.length === 0) {
       return res.status(400).json({ error: "emailUsuario y opciones son requeridos" });
     }
+
+    // Si viene como string JSON (porque lo mandas como formData), conviértelo a array
+    let categoriasArray = categorias;
+    if (typeof categorias === 'string') {
+      try {
+        categoriasArray = JSON.parse(categorias);
+      } catch (err) {
+        return res.status(400).json({ error: "Las categorías enviadas no son un JSON válido" });
+      }
+    }
+
+    if (!Array.isArray(categoriasArray)) {
+      return res.status(400).json({ error: "categorias debe ser un arreglo" });
+    }
+
+    categoriasArray = categoriasArray.map(c =>
+      c.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+    );
 
     const usuario = await Usuario.findOne({ email: emailUsuario });
     if (!usuario) {
@@ -30,15 +46,13 @@ exports.crearVotacion = async (req, res) => {
     }
 
     let imagenUrl = null;
-
-    // Si viene archivo (backend sube), si no, usa el link del body (frontend subió a Cloudinary)
     if (req.file) {
       const resultado = await cloudinary.uploader.upload(req.file.path, {
         folder: "votaciones",
       });
       imagenUrl = resultado.secure_url;
     } else if (req.body.imagen) {
-      imagenUrl = req.body.imagen; // el frontend ya envió un link Cloudinary
+      imagenUrl = req.body.imagen;
     }
 
     const nuevaVotacion = new Votacion({
@@ -51,13 +65,12 @@ exports.crearVotacion = async (req, res) => {
       fechaFin: new Date(fechaFin),
       imagen: imagenUrl,
       estado: "activa",
+      categorias: categoriasArray,  // ← agregamos aquí
     });
 
     const savedVotacion = await nuevaVotacion.save();
 
-
     let opcionesArray = opciones;
-
     if (typeof opciones === 'string') {
       try {
         opcionesArray = JSON.parse(opciones);
@@ -69,7 +82,7 @@ exports.crearVotacion = async (req, res) => {
     if (!Array.isArray(opcionesArray) || opcionesArray.length === 0) {
       return res.status(400).json({ error: "opciones debe ser un arreglo no vacío" });
     }
-    // Procesar las opciones como array de strings
+
     const opcionesDocs = opcionesArray.map(opcion => ({
       idVotacion: savedVotacion._id,
       descripcion: opcion
@@ -77,17 +90,12 @@ exports.crearVotacion = async (req, res) => {
 
     await Opcion.insertMany(opcionesDocs);
 
-    //await session.commitTransaction();
-    //session.endSession();
-
     res.status(201).json({
       mensaje: "Votación y opciones creadas exitosamente",
       votacion: savedVotacion,
     });
 
   } catch (error) {
-    //await session.abortTransaction();
-    //session.endSession();
     console.error("Error al crear la votación:", error);
     res.status(500).json({ error: "Error interno al crear la votación" });
   }
@@ -180,10 +188,17 @@ exports.obtenerVotacionPorId = async (req, res) => {
 exports.obtenerVotacionesPorCategoria = async (req, res) => {
   try {
     const { categoria } = req.params;
-    const votaciones = await Votacion.find({ categoria: categoria });
+
+    // Convertimos siempre a array (aunque solo venga una)
+    const categoriasArray = categoria.split(',').map(c => c.trim().toLowerCase());
+
+
+    const votaciones = await Votacion.find({
+      categorias: { $in: categoriasArray }
+    });
 
     if (votaciones.length === 0) {
-      return res.status(404).json({ error: "No se encontraron votaciones" });
+      return res.status(404).json({ error: "No se encontraron votaciones para las categorías dadas" });
     }
 
     res.status(200).json(votaciones);
@@ -192,6 +207,7 @@ exports.obtenerVotacionesPorCategoria = async (req, res) => {
     res.status(500).json({ error: "Error interno al obtener las votaciones" });
   }
 };
+
 
 exports.obtenerVotacionesCreadasPorUsuario = async (req, res) => {
   try {

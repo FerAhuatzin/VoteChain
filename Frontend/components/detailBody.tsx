@@ -19,6 +19,7 @@ interface props {
 }
 
 export const DetailBody = ({ poll, votes, user }: props) => {
+  console.log("DEBUG DetailBody poll prop:", poll);
   const router = useRouter();
 
   const opciones = votes?.opciones || [];
@@ -44,11 +45,17 @@ export const DetailBody = ({ poll, votes, user }: props) => {
   };
 
   const handlePress = () => {
+    console.log("DEBUG handlePress poll:", poll);
+    console.log("DEBUG handlePress poll.id:", poll?.id);
     if (!poll?.id) {
       console.warn("poll.id está vacío, no se puede navegar");
       return;
     }
-    router.push(`/polls/execute/${poll.id}`);
+  
+    router.push({
+      pathname: "/polls/execute/[pollId]",
+      params: { pollId: poll.id},
+    });
   };
 
   return (

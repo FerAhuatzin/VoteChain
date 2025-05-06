@@ -20,18 +20,16 @@ export default function Detail() {
     const fetchPollData = async () => {
       setLoading(true);
       try {
-        // Obtener los detalles de la votación
-        const pollRes = await fetch(`http://192.168.1.5:3000/obtener-votacion/6818f146de10047544d641cd`);
+        const pollRes = await fetch(`http://192.168.1.5:3000/obtener-votacion/${pollId}`);
         const pollData = await pollRes.json();
+        console.log("DEBUG pollData response:", pollData);
+        // Mapear _id → id
         setPoll(pollData);
-
-        // Obtener las opciones de la votación
-        const optionsRes = await fetch(`http://192.168.1.5:3000/obtener-opciones/6818f146de10047544d641cd`);
+    
+        const optionsRes = await fetch(`http://192.168.1.5:3000/obtener-opciones/${pollId}`);
         const optionsData = await optionsRes.json();
-
-        // Guardamos solo el array directamente
+    
         setVotes({ opciones: optionsData });
-
       } catch (error) {
         console.error("Error cargando detalles:", error);
         setPoll(null);
@@ -65,7 +63,7 @@ export default function Detail() {
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <Stack.Screen options={{ header: () => <DetailHeader imagen={poll.imagen} /> }} />
-      <SendBody options={votes.opciones} idVotacion={poll.id} /> {/* ✅ Pasamos solo el array aquí */}
+      <SendBody options={votes.opciones} idVotacion={poll.id} /> {/*Pasamos solo el array aquí */}
     </View>
   );
 }

@@ -14,7 +14,14 @@ export default function Index() {
     try {
       const response = await fetch(`http://192.168.1.5:3000/obtener-votaciones-por-categoria/${category}`);
       const data = await response.json();
-      setPolls(data);
+
+  
+      const processedData = data.map((p) => ({
+        ...p,
+        id: p._id,
+      }));
+
+      setPolls(processedData);
     } catch (error) {
       console.error("Error fetching polls:", error);
       setPolls([]); // fallback vacío si falla
@@ -22,8 +29,6 @@ export default function Index() {
       setLoading(false);
     }
   };
-  
-  
 
   useEffect(() => {
     fetchPolls(selectedCategory);

@@ -12,35 +12,40 @@ export default function Detail() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!pollId) {
-      console.error("pollId está vacío o undefined");
+    console.log("DEBUG pollId:", pollId);
+
+    if (!pollId || typeof pollId !== "string") {
+      console.error("pollId inválido:", pollId);
+      setLoading(false);
       return;
     }
-  
+
     const fetchPollDetails = async () => {
       setLoading(true);
       try {
-        // 1. Detalles generales
-        const pollRes = await fetch(`http://192.168.1.5:3000/obtener-votacion/6818f146de10047544d641cd`);
+        const pollRes = await fetch(`http://192.168.1.5:3000/obtener-votacion/${pollId}`);
         const pollData = await pollRes.json();
-    
-        // 2. Opciones
-        const opcionesRes = await fetch(`http://192.168.1.5:3000/obtener-opciones/6818f146de10047544d641cd`);
-        const opcionesData = await opcionesRes.json();
-    
-        // 3. Conteo de votos
-        const votesRes = await fetch(`http://192.168.1.5:3000/conteo/6818f146de10047544d641cd`);
-        const votesData = await votesRes.json();
-    
-        // Unir opciones con conteo
-        const opcionesConVotos = opcionesData.map((opcion) => ({
-          descripcion: opcion.descripcion,
-          votos: votesData[opcion._id] || 0, // usa el _id directo como clave
-        }));
-    
+
+        console.log("DEBUG pollData:", pollData);;
         setPoll(pollData);
+
+
+        const opcionesRes = await fetch(`http://192.168.1.5:3000/obtener-opciones/${pollId}`);
+        const opcionesData = await opcionesRes.json();
+
+        const votesRes = await fetch(`http://192.168.1.5:3000/conteo/${pollId}`);
+        const votesData = await votesRes.json();
+
+        const opcionesConVotos = Array.isArray(opcionesData)
+          ? opcionesData.map((opcion) => ({
+              _id: opcion._id,
+              descripcion: opcion.descripcion,
+              votos: votesData[opcion._id] || 0,
+            }))
+          : [];
+
         setVotes({ idVotacion: pollId, opciones: opcionesConVotos });
-    
+
       } catch (error) {
         console.error("Error cargando detalles:", error);
         setPoll(null);
@@ -49,8 +54,7 @@ export default function Detail() {
         setLoading(false);
       }
     };
-    
-  
+
     fetchPollDetails();
   }, [pollId]);
 
@@ -73,7 +77,11 @@ export default function Detail() {
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
       <Stack.Screen options={{ header: () => <DetailHeader imagen={poll.imagen} /> }} />
-      <DetailBody poll={poll} votes={votes} user={{ nombre: poll.usuarioCreador || "Desconocido" }} />
+      <DetailBody
+        poll={poll}
+        votes={votes}
+        user={{ nombre: poll.usuarioCreador || "Desconocido" }}
+      />
     </View>
   );
 }

@@ -5,31 +5,35 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import { colors } from "../styles/colors";
 import { useRouter } from "expo-router";
 
 interface Props {
   options: any[];
+  idVotacion: string;
 }
 
-
-export const SendBody = ({ options, idVotacion }: Props & { idVotacion: string }) => {
+export const SendBody = ({ options, idVotacion }: Props) => {
   const router = useRouter();
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleSelect = (descripcion: string) => {
     setSelectedOption(descripcion);
   };
 
   const handleConfirmVote = async () => {
+    setLoading(true);
     try {
       const opcionSeleccionada = options.find(
         (op) => op.descripcion === selectedOption
       );
 
       if (!opcionSeleccionada) {
-        console.error("Opción seleccionada no encontrada");
+        Alert.alert("Error", "Opción seleccionada no encontrada");
         return;
       }
 
@@ -37,11 +41,12 @@ export const SendBody = ({ options, idVotacion }: Props & { idVotacion: string }
         idVotacion,
         idOpcion: opcionSeleccionada._id,
         idUsuario: "67c79925289d45ed6e584a27", // fijo por ahora
-        voter: "0xC3dA41434d4B2bcB2B25Ea325b64cEFc7a2cEf24", // vacío
-        signature: "0x2c2a8c1455fab862f3231215a0580c8805b5fb0ddc95f22ca1f8bff720ad094a01d0701cda43889661681683b1cbd32901d0725582d46f58478dbaf6068399391c", // vacío
+        voter: "0xC3dA41434d4B2bcB2B25Ea325b64cEFc7a2cEf24",
+        signature:
+          "0x2c2a8c1455fab862f3231215a0580c8805b5fb0ddc95f22ca1f8bff720ad094a01d0701cda43889661681683b1cbd32901d0725582d46f58478dbaf6068399391c",
       };
 
-      console.log("Enviando voto:", body); // debug
+      console.log("Enviando voto:", body);
 
       const res = await fetch("http://192.168.1.5:3000/registrar-voto", {
         method: "POST",
@@ -50,13 +55,24 @@ export const SendBody = ({ options, idVotacion }: Props & { idVotacion: string }
       });
 
       if (res.ok) {
-        console.log("Voto registrado correctamente");
-        router.dismiss(2);
+        Alert.alert("Éxito", "Tu voto ha sido registrado correctamente", [
+          {
+            text: "OK",
+            onPress: () => router.dismiss(2),
+          },
+        ]);
       } else {
-        console.error("Error al registrar voto");
+        const errorData = await res.json();
+        Alert.alert(
+          "Error",
+          errorData?.message || "Hubo un problema al registrar tu voto"
+        );
       }
     } catch (error) {
       console.error("Error en la solicitud:", error);
+      Alert.alert("Error", "No se pudo conectar al servidor");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -105,18 +121,23 @@ export const SendBody = ({ options, idVotacion }: Props & { idVotacion: string }
         <TouchableOpacity
           style={[
             styles.button,
-            !selectedOption ? { opacity: 0.5 } : null,
+            !selectedOption || loading ? { opacity: 0.5 } : null,
           ]}
-          disabled={!selectedOption}
+          disabled={!selectedOption || loading}
           onPress={handleConfirmVote}
         >
-          <Text style={{ color: "white", fontSize: 16 }}>Confirmar voto</Text>
+          {loading ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <Text style={{ color: "white", fontSize: 16 }}>
+              Confirmar voto
+            </Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -154,4 +175,3 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 });
-

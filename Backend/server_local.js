@@ -9,7 +9,7 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 // Importar rutas
 const usuarioRoutes = require('./routes/usuarioRoutes');
-const votacionRoutes = requzire('./routes/votacionRoutes');
+const votacionRoutes = require('./routes/votacionRoutes');
 const invitacionRoutes = require('./routes/invitacionRoutes');
 const opcionRoutes = require('./routes/opcionRoutes');
 const votoRoutes = require('./routes/votoRoutes');

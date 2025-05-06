@@ -40,7 +40,7 @@ const votacionSchema = new mongoose.Schema({
     },
     imagen: { 
         type: String,
-        default: null 
+        default: null
     },
     estado: { 
         type: String, 
@@ -50,7 +50,7 @@ const votacionSchema = new mongoose.Schema({
 
     categorias: {
         type: [String],
-        enum: ["cine", "deportes", "economia", "tecnologia", "politica", "ambiente", "educacion", "musica"],
+        enum: ["cine", "deportes", "economia", "tecnologia", "politica", "ambiente", "educacion", "musica","populares"],
         default: []
     },
 

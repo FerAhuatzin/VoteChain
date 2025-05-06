@@ -9,7 +9,7 @@ const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 // Importar rutas
 const usuarioRoutes = require('./routes/usuarioRoutes');
-const votacionRoutes = require('./routes/votacionRoutes');
+const votacionRoutes = requzire('./routes/votacionRoutes');
 const invitacionRoutes = require('./routes/invitacionRoutes');
 const opcionRoutes = require('./routes/opcionRoutes');
 const votoRoutes = require('./routes/votoRoutes');
@@ -19,7 +19,7 @@ app.use(express.json());
 app.use(cors());
 
 // Conectar a MongoDB
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://admin:admin@129.146.38.202:27017/votechainDBtest?authSource=admin';
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://admin:admin@129.146.38.202:27017/votechainDBprod?authSource=admin';
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("Conectado a MongoDB"))

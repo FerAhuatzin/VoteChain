@@ -48,7 +48,7 @@ export const SendBody = ({ options, idVotacion }: Props) => {
 
       console.log("Enviando voto:", body);
 
-      const res = await fetch("http://192.168.1.5:3000/registrar-voto", {
+      const res = await fetch("http://129.146.38.202:3000/registrar-voto", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

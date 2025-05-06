@@ -60,10 +60,10 @@ export default function titleAndDescription() {
 
 const styles = StyleSheet.create({
   formContainer: {
-    gap: 16, 
+    gap: 2, 
   },
   fieldGroup: {
-    marginBottom: 12,
+    marginBottom: 5,
   },
   label: {
     fontSize: 16,
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   input: {
-    height: 96,
+    height: 45,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,

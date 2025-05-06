@@ -18,7 +18,7 @@ export default function Index() {
     const fetchPolls = async () => {
       try {
         const response = await fetch(
-          'http://129.146.38.202:3000/obtener-votaciones-creadas-por-usuario/67c79925289d45ed6e584a27'
+          'http://129.146.38.202:3000/obtener-votaciones-creadas-por-usuario/67c79834289d45ed6e584a21'
         );
         const rawData = await response.json();
 

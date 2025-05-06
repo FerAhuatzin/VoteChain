@@ -40,7 +40,7 @@ export const SendBody = ({ options, idVotacion }: Props) => {
       const body = {
         idVotacion,
         idOpcion: opcionSeleccionada._id,
-        idUsuario: "67c79925289d45ed6e584a27", // fijo por ahora
+        idUsuario: "67c79834289d45ed6e584a21", // fijo por ahora
         voter: "0xC3dA41434d4B2bcB2B25Ea325b64cEFc7a2cEf24",
         signature:
           "0x2c2a8c1455fab862f3231215a0580c8805b5fb0ddc95f22ca1f8bff720ad094a01d0701cda43889661681683b1cbd32901d0725582d46f58478dbaf6068399391c",

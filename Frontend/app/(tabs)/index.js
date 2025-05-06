@@ -12,7 +12,7 @@ export default function Index() {
   const fetchPolls = async (category) => {
     setLoading(true);
     try {
-      const response = await fetch(`http://192.168.1.5:3000/obtener-votaciones-por-categoria/${category}`);
+      const response = await fetch(`http://129.146.38.202:3000/obtener-votaciones-por-categoria/${category}`);
       const data = await response.json();
 
   

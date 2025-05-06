@@ -20,13 +20,13 @@ export default function Detail() {
     const fetchPollData = async () => {
       setLoading(true);
       try {
-        const pollRes = await fetch(`http://192.168.1.5:3000/obtener-votacion/${pollId}`);
+        const pollRes = await fetch(`http://129.146.38.202:3000/obtener-votacion/${pollId}`);
         const pollData = await pollRes.json();
         console.log("DEBUG pollData response:", pollData);
         // Mapear _id → id
         setPoll(pollData);
     
-        const optionsRes = await fetch(`http://192.168.1.5:3000/obtener-opciones/${pollId}`);
+        const optionsRes = await fetch(`http://129.146.38.202:3000/obtener-opciones/${pollId}`);
         const optionsData = await optionsRes.json();
     
         setVotes({ opciones: optionsData });

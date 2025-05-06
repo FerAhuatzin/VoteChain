@@ -23,17 +23,17 @@ export default function Detail() {
     const fetchPollDetails = async () => {
       setLoading(true);
       try {
-        const pollRes = await fetch(`http://192.168.1.5:3000/obtener-votacion/${pollId}`);
+        const pollRes = await fetch(`http://129.146.38.202:3000/obtener-votacion/${pollId}`);
         const pollData = await pollRes.json();
 
         console.log("DEBUG pollData:", pollData);;
         setPoll(pollData);
 
 
-        const opcionesRes = await fetch(`http://192.168.1.5:3000/obtener-opciones/${pollId}`);
+        const opcionesRes = await fetch(`http://129.146.38.202:3000/obtener-opciones/${pollId}`);
         const opcionesData = await opcionesRes.json();
 
-        const votesRes = await fetch(`http://192.168.1.5:3000/conteo/${pollId}`);
+        const votesRes = await fetch(`http://129.146.38.202:3000/conteo/${pollId}`);
         const votesData = await votesRes.json();
 
         const opcionesConVotos = Array.isArray(opcionesData)

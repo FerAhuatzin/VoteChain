@@ -58,7 +58,7 @@ export default function Summary() {
         } as any);
       }
   
-      const response = await fetch('http://192.168.1.5:3000/crear-votacion', {
+      const response = await fetch('http://129.146.38.202:3000/crear-votacion', {
         method: 'POST',
         body: formData,
         // no pongas headers manuales

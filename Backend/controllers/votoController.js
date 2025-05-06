@@ -1,9 +1,10 @@
 const Voto = require('../models/Voto');
 const Opcion = require('../models/Opcion');
 const mongoose = require('mongoose');
+const { Interface } = require('ethers');
 
 const { DefenderRelayProvider } = require("defender-relay-client/lib/ethers");
-const { ethers } = require("ethers");
+const { ethers, ZeroPadValue } = require('ethers');
 require("dotenv").config();
 
 const credentials = {
@@ -16,6 +17,7 @@ const contractAbi = require("../abi/VotingSystem.json");
 const contractAddress = process.env.CONTRACT_ADDRESS;
 const readContract = new ethers.Contract(contractAddress, contractAbi, provider);
 
+
 exports.crearVoto = async (req, res) => {
   try {
     const { idVotacion, idOpcion, idUsuario, voter, signature } = req.body;
@@ -24,8 +26,9 @@ exports.crearVoto = async (req, res) => {
       return res.status(400).json({ error: "Se requiere 'voter', 'signature' y 'idOpcion'" });
     }
 
-    // Convertir idOpcion (Mongo ObjectId) a bytes32
-    const opcionBytes32 = ethers.utils.hexZeroPad("0x" + idOpcion, 32);
+    // Aseguramos que venga como hex string (ej: '0xabc123...')
+    const opcionHex = '0x' + idOpcion;
+    const opcionBytes32 = ethers.zeroPadValue(opcionHex, 32);
 
     // Enviar la transacción a blockchain
     const tx = await readContract.connect(provider.getSigner()).vote(opcionBytes32, voter, signature);
@@ -113,10 +116,13 @@ exports.obtenerVotoPorTxHash = async (req, res) => {
       return res.status(404).json({ error: "No se encontró la transacción o no contiene datos" });
     }
 
-    const iface = new ethers.utils.Interface(contractAbi);
+    const iface = new Interface(contractAbi);
 
-    // Decodeamos el input
-    const decoded = iface.parseTransaction({ data: tx.data, value: tx.value });
+    // Corregimos el value a bigint
+    const decoded = iface.parseTransaction({
+      data: tx.data,
+      value: tx.value.toBigInt()
+    });
 
     if (decoded.name !== "vote") {
       return res.status(400).json({ error: "La transacción no es de tipo 'vote'" });
@@ -148,20 +154,19 @@ const getTxHashesByVotacion = async (idVotacion) => {
 
 const getCandidateIdFromTx = async (txHash, provider, contractAbi) => {
   const tx = await provider.getTransaction(txHash);
-  const iface = new ethers.utils.Interface(contractAbi);
+  const iface = new Interface(contractAbi);  // <-- Cambio aquí
 
-  const decoded = iface.parseTransaction({ data: tx.data, value: tx.value });
+  const decoded = iface.parseTransaction({ data: tx.data, value: tx.value.toBigInt() });  // <-- convertir a BigInt
   if (decoded.name !== "vote") {
     throw new Error(`La transacción ${txHash} no es un voto`);
   }
 
   // Convertir a hex limpio
   const rawCandidateId = decoded.args.candidateId.toString();
-  const hexCandidateId = ethers.BigNumber.from(rawCandidateId).toHexString().replace(/^0x0*/, '');
+  const hexCandidateId = `0x${BigInt(rawCandidateId).toString(16)}`;  // <-- usar BigInt en v6
 
   return hexCandidateId;  // devuelve el ObjectId en formato Mongo
 };
-
 
 
 const countVotesByCandidate = (candidateIds) => {

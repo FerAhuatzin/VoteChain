@@ -34,15 +34,36 @@ export default function Detail() {
         const opcionesData = await opcionesRes.json();
 
         const votesRes = await fetch(`http://129.146.38.202:3000/conteo/${pollId}`);
+        console.log("DEBUG votesRes status:", votesRes.status);
         const votesData = await votesRes.json();
+        console.log("DEBUG votesData raw:", votesData);
+        
+        if (!votesData || typeof votesData !== 'object') {
+          console.error("votesData no es un objeto válido:", votesData);
+          setVotes({ idVotacion: pollId, opciones: opcionesData.map(opcion => ({
+            _id: opcion._id,
+            descripcion: opcion.descripcion,
+            votos: 0
+          }))});
+          return;
+        }
 
         const opcionesConVotos = Array.isArray(opcionesData)
-          ? opcionesData.map((opcion) => ({
+        ? opcionesData.map((opcion) => {
+            const opcionId = opcion._id.toString();
+            const hexId = '0x' + opcionId;
+            console.log("DEBUG opcionId:", opcionId);
+            console.log("DEBUG hexId:", hexId);
+            console.log("DEBUG votesData keys:", Object.keys(votesData));
+            console.log("DEBUG votesData[hexId]:", votesData[hexId]);
+            return {
               _id: opcion._id,
               descripcion: opcion.descripcion,
-              votos: votesData[opcion._id] || 0,
-            }))
-          : [];
+              votos: votesData[hexId] || 0,
+            };
+          })
+        : [];
+
 
         setVotes({ idVotacion: pollId, opciones: opcionesConVotos });
 

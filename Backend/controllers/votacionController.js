@@ -183,31 +183,30 @@ exports.obtenerVotacionPorId = async (req, res) => {
   }
 };
 
-
-
 exports.obtenerVotacionesPorCategoria = async (req, res) => {
   try {
     const { categoria } = req.params;
 
+    // Si la categoría es "Populares", devolver todas las votaciones
+    if (categoria.toLowerCase() === "populares") {
+      const votaciones = await Votacion.find();
+      return res.status(200).json(votaciones);
+    }
+
     // Convertimos siempre a array (aunque solo venga una)
     const categoriasArray = categoria.split(',').map(c => c.trim().toLowerCase());
-
 
     const votaciones = await Votacion.find({
       categorias: { $in: categoriasArray }
     });
 
-    if (votaciones.length === 0) {
-      return res.status(404).json({ error: "No se encontraron votaciones para las categorías dadas" });
-    }
-
+    // Devolver array vacío en lugar de error
     res.status(200).json(votaciones);
   } catch (error) {
     console.error("Error al obtener votaciones por categoría:", error);
     res.status(500).json({ error: "Error interno al obtener las votaciones" });
   }
 };
-
 
 exports.obtenerVotacionesCreadasPorUsuario = async (req, res) => {
   try {

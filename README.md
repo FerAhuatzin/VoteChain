@@ -33,12 +33,34 @@ Vote chain is a cross-OS mobile app that allows users to create, participate and
 ## Use cases
 
 ### Creating a poll
-
+<p align="center">
+   <img src="./ReadmeImages/CreatePoll-Category.jpg" alt="Select category" width="13%"/>
+   <img src="./ReadmeImages/CreatePoll-Title.jpg" alt="Select category" width="13%"/>
+   <img src="./ReadmeImages/CreatePoll-Options.jpg" alt="Select category" width="13%"/>
+   <img src="./ReadmeImages/CreatePoll-Images.jpg" alt="Select category" width="13%"/>
+   <img src="./ReadmeImages/CreatePoll-DueDate.jpg" alt="Select category" width="13%"/>
+   <img src="./ReadmeImages/CreatePoll-Preferences.jpg" alt="Select category" width="13%"/>
+   <img src="./ReadmeImages/CreatePoll-Review.jpg" alt="Select category" width="13%"/>
+</p>
 
 ### Voting
-
+<p>
+   <img src="./ReadmeImages/Vote-Home.jpg" alt="Select category" width="13%"/>
+   <img src="./ReadmeImages/Vote-Description.jpg" alt="Select category" width="13%"/>
+   <img src="./ReadmeImages/Vote-Vote.jpg" alt="Select category" width="13%"/>
+</p>
 
 ### Changing profile information
+<p>
+   <img src="./ReadmeImages/Profile-All.jpg" alt="Select category" width="13%"/>
+   <img src="./ReadmeImages/Profile-Info.jpg" alt="Select category" width="13%"/>
+</p>
+
+## Blockchain Features
+- Every vote is signed with MetaMask and recorded in the Sepolia blockchain using a smart contract.
+- Signatures are validated using OpenZeppelin contracts that allow multiple users to sign transactions under a common account.
+- The blockchain ensures one vote per user by associating votes with unique Ethereum addresses.
+- Vote data remains immutable and verifiable through the blockchain explorer.
 
 ## Running project
 - Clone repo

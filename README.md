@@ -30,6 +30,23 @@ Vote chain is a cross-OS mobile app that allows users to create, participate and
 #### Architecture
 - Model Controller Routes (MCR) architecture for each database structure.
 
+## Project structure
+```
+VoteChain/
+│
+├── Frontend/            # React Native mobile application
+│   ├── App/             # Screens and navigation logic
+│   └── Components/      # UI elements
+│
+├── Backend/             # Express.js API
+│   ├── controllers/     # Business logic
+│   ├── models/          # Mongoose schemas
+│   └── routes/          # API routing
+│
+├── ReadmeImages/        # Image assets used in documentation
+└── README.md            # Project documentation
+```
+
 ## Use cases
 
 ### Creating a poll

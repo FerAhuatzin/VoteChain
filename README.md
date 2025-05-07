@@ -1,33 +1,44 @@
 # VoteChain
-Vote chain is a cross-OS mobile app that allows users to create, participate and observe polls of every kind: Politics, economics, sports, culture, general opinion, trends, etc. All of this powered with blockchain technology to perform a secure, confidencial, inmmutable and clean votation in every possible user necessity related with voting.
+Vote chain is a cross-OS mobile app that allows users to create, participate and observe polls of every kind: Politics, economics, sports, culture, general opinion, trends, etc. All of this powered with **blockchain** technology to perform a secure, confidencial, inmmutable and clean votation in every possible user necessity related with voting.
 
-## Used technologies and architecture
+## Technologies and architecture
 
 ### Frontend
 
 #### Technlogies
 - React native: All the UI was coded using this platform.
-- JavaScript: For the main view JS was used.
+- JavaScript: Was used for the main view JS.
 - TypeScript: The components of the main views and other documents were made with Typescript.
 #### Architecture
-- Tabs and Stack wiring using Expo
-- App folder contains the wiring and all the Views
+- Tabs and Stack wiring using Expo.
+- App folder contains the wiring and all the Views.
 - Components folder contains the individual components of each views.
    
 ### Backend
 
 #### Technologies
-- NodeJS
-- JavaScript
-- ExpressJS
-- MongoDB
-- Metamask
-- OpenZepellin
-- Sepolia Testnet (Ethereum)
-
+- NodeJS: NodeJS as Javascript platform to code the project.
+- JavaScript: Base programming language.
+- ExpressJS: Framework for API REST construction.
+- MongoDB: Selected database with capability of large amount of polls information.
+- Docker: Used to put the MongoDB server inside of a OCI instance.
+- Oracle Cloud Interface (OCI): Used for Database and backend availability storing thm in OCI instances.
+- Metamask: Used to make an account to be able the sign when voting uing blockchain with Sepolia. 
+- OpenZepellin: Used so that different users could sign with ther I using one MetaMask account avoiding them to create an account when using the app.
+- Sepolia Testnet (Ethereum): Ethereum blockchain based net to make tests regarding blockchain transactions when voting.
+  
 #### Architecture
-- Model Controller Routes
+- Model Controller Routes (MCR) architecture for each database structure.
 
+## Use cases
+
+### Creating a poll
+
+
+### Voting
+
+
+### Changing profile information
 
 ## Running project
 - Clone repo

@@ -30,15 +30,54 @@ Vote chain is a cross-OS mobile app that allows users to create, participate and
 #### Architecture
 - Model Controller Routes (MCR) architecture for each database structure.
 
+## Project structure
+```
+VoteChain/
+│
+├── Frontend/            # React Native mobile application
+│   ├── App/             # Screens and navigation logic
+│   └── Components/      # UI elements
+│
+├── Backend/             # Express.js API
+│   ├── controllers/     # Business logic
+│   ├── models/          # Mongoose schemas
+│   └── routes/          # API routing
+│
+├── ReadmeImages/        # Image assets used in documentation
+└── README.md            # Project documentation
+```
+
 ## Use cases
 
 ### Creating a poll
-
+<p align="center">
+   <img src="./ReadmeImages/CreatePoll-Category.jpg" alt="Select category" width="13%"/>
+   <img src="./ReadmeImages/CreatePoll-Title.jpg" alt="Select category" width="13%"/>
+   <img src="./ReadmeImages/CreatePoll-Options.jpg" alt="Select category" width="13%"/>
+   <img src="./ReadmeImages/CreatePoll-Images.jpg" alt="Select category" width="13%"/>
+   <img src="./ReadmeImages/CreatePoll-DueDate.jpg" alt="Select category" width="13%"/>
+   <img src="./ReadmeImages/CreatePoll-Preferences.jpg" alt="Select category" width="13%"/>
+   <img src="./ReadmeImages/CreatePoll-Review.jpg" alt="Select category" width="13%"/>
+</p>
 
 ### Voting
-
+<p>
+   <img src="./ReadmeImages/Vote-Home.jpg" alt="Select category" width="13%"/>
+   <img src="./ReadmeImages/Vote-Description.jpg" alt="Select category" width="13%"/>
+   <img src="./ReadmeImages/Vote-Vote.jpg" alt="Select category" width="13%"/>
+</p>
 
 ### Changing profile information
+<p>
+   <img src="./ReadmeImages/Profile-All.jpg" alt="Select category" width="13%"/>
+   <img src="./ReadmeImages/Profile-Info.jpg" alt="Select category" width="13%"/>
+</p>
+
+## Blockchain Features
+- Every vote is signed with MetaMask and recorded in the Sepolia blockchain using a smart contract.
+- Signatures are validated using OpenZeppelin contracts that allow multiple users to sign transactions under a common account.
+- The blockchain ensures one vote per user by associating votes with unique Ethereum addresses.
+- Vote data remains immutable and verifiable through the blockchain explorer.
 
 ## Running project
 - Clone repo
